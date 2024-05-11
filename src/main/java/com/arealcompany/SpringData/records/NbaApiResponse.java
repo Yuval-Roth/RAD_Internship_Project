@@ -1,4 +1,4 @@
-package com.arealcompany.SpringData;
+package com.arealcompany.SpringData.records;
 
 import java.util.List;
 

@@ -1,5 +1,7 @@
 package com.arealcompany.SpringData;
 
+import com.arealcompany.SpringData.records.NbaApiResponse;
+import com.arealcompany.SpringData.records.Team;
 import com.google.gson.Gson;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.SpringApplication;
@@ -21,14 +23,14 @@ public class Main implements ApplicationContextAware {
 
 	private static final String ENV_KEY_NAME = "RAPIDAPI_KEY";
 	private static ApplicationContext context;
-	private static MongoRepository<Team, String> repo;
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 		SpringApplication.run(Main.class, args);
 
 		System.out.println("Would you like to download teams NBA data? (y/n)");
 		String response = System.console().readLine();
 
+		// download the data if the user wants to
 		if (response.equals("y")) {
 			System.out.println("Downloading NBA teams data...");
 			downloadNbaData();
@@ -41,10 +43,13 @@ public class Main implements ApplicationContextAware {
 	}
 
 	private static void downloadNbaData() {
-		repo = context.getBean(NbaTeamsData.class);
-		repo.deleteAll();
 		Gson gson = new Gson();
 
+		// get the repository and clean it
+        MongoRepository<Team, String> repo = context.getBean(NbaTeamsData.class);
+		repo.deleteAll();
+
+		// download the data and save it
 		String response = callAPI();
 		NbaApiResponse nbaData = gson.fromJson(response, NbaApiResponse.class);
 		repo.saveAll(nbaData.response());
