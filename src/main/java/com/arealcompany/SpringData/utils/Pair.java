@@ -27,7 +27,7 @@ public class Pair<F,S> {
         this.second = second;
     }
 
-    public static <F,S> Pair<F,S> pairOf(F first, S second) {
+    public static <F,S> Pair<F,S> Of(F first, S second) {
         return new Pair<>(first, second);
     }
 

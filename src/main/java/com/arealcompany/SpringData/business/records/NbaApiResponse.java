@@ -2,12 +2,12 @@ package com.arealcompany.SpringData.business.records;
 
 import java.util.List;
 
-public record NbaApiResponse(
+public record NbaApiResponse<T>(
         String get,
         List<String> parameters,
         List<String> errors,
-        int results,
-        List<Team> response
+        Integer results,
+        List<T> response
 ) {
 }
 
