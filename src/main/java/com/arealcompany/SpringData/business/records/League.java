@@ -1,4 +1,4 @@
-package com.arealcompany.SpringData.records;
+package com.arealcompany.SpringData.business.records;
 
 public record League (
         String conference,

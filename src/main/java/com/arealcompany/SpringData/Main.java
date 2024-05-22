@@ -1,7 +1,8 @@
 package com.arealcompany.SpringData;
 
-import com.arealcompany.SpringData.records.NbaApiResponse;
-import com.arealcompany.SpringData.records.Team;
+import com.arealcompany.SpringData.repository.Teams;
+import com.arealcompany.SpringData.business.records.NbaApiResponse;
+import com.arealcompany.SpringData.business.records.Team;
 import com.google.gson.Gson;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.SpringApplication;
@@ -46,7 +47,7 @@ public class Main implements ApplicationContextAware {
 		Gson gson = new Gson();
 
 		// get the repository and clean it
-        MongoRepository<Team, String> repo = context.getBean(NbaTeamsData.class);
+        MongoRepository<Team, String> repo = context.getBean(Teams.class);
 		repo.deleteAll();
 
 		// download the data and save it

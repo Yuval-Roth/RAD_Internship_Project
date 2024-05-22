@@ -1,4 +1,4 @@
-package com.arealcompany.SpringData.records;
+package com.arealcompany.SpringData.business.records;
 
 import java.util.Map;
 

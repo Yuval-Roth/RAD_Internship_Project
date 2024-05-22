@@ -1,6 +1,7 @@
-package com.arealcompany.SpringData;
+package com.arealcompany.SpringData.api;
 
-import com.arealcompany.SpringData.records.Team;
+import com.arealcompany.SpringData.repository.Teams;
+import com.arealcompany.SpringData.business.records.Team;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class NBATeamsDataRestfulAPI implements ApplicationContextAware {
+public class NbaApi implements ApplicationContextAware {
 
     private ApplicationContext context;
 
@@ -34,7 +35,7 @@ public class NBATeamsDataRestfulAPI implements ApplicationContextAware {
 
     @GetMapping("/teams")
     public String getTeams(@RequestParam(value = "maxcount", defaultValue = "-1") Integer maxCount) {
-        List<Team> teams = context.getBean(NbaTeamsData.class).findAll();
+        List<Team> teams = context.getBean(Teams.class).findAll();
         StringBuilder output = new StringBuilder();
         int count = 0;
         for (Team team : teams) {
