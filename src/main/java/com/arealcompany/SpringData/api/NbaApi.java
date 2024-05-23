@@ -1,10 +1,12 @@
 package com.arealcompany.SpringData.api;
 
-import com.arealcompany.SpringData.repository.Teams;
+import com.arealcompany.SpringData.business.records.Game;
+import com.arealcompany.SpringData.repository.GamesRepository;
+import com.arealcompany.SpringData.repository.TeamsRepository;
 import com.arealcompany.SpringData.business.records.Team;
+import com.arealcompany.SpringData.utils.JsonUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,44 +14,43 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class NbaApi implements ApplicationContextAware {
+public class NbaApi {
 
-    private ApplicationContext context;
+    private final GamesRepository gamesRepo;
+    private final TeamsRepository teamsRepo;
 
-    private static final String BASE_HTML_DOC = """
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>NBA Teams</title>
-            </head>
-            <body>
-            <table>
-                <tbody>
-                [PLACEHOLDER]
-                </tbody>
-            </table>
-            </body>
-            </html>""";
+    public NbaApi(GamesRepository games, TeamsRepository teams) {
+        this.gamesRepo = games;
+        this.teamsRepo = teams;
+    }
 
     @GetMapping("/teams")
     public String getTeams(@RequestParam(value = "maxcount", defaultValue = "-1") Integer maxCount) {
-        List<Team> teams = context.getBean(Teams.class).findAll();
+        List<Team> teams = teamsRepo.findAll();
         StringBuilder output = new StringBuilder();
         int count = 0;
         for (Team team : teams) {
             if (maxCount >= 0 && count >= maxCount) {
                 break;
             }
-            output.append("<tr>").append(team.prettyHtml()).append("</br></br></br></tr>");
+            output.append(JsonUtils.serialize(team)).append("\n");
             count++;
         }
-        return BASE_HTML_DOC.replace("[PLACEHOLDER]",output.toString());
+        return output.toString();
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        context = applicationContext;
+    @GetMapping("/games")
+    public String getGames(@RequestParam(value = "maxcount", defaultValue = "-1") Integer maxCount) {
+        List<Game> games = gamesRepo.findAll();
+        StringBuilder output = new StringBuilder();
+        int count = 0;
+        for (Game game : games) {
+            if (maxCount >= 0 && count >= maxCount) {
+                break;
+            }
+            output.append(JsonUtils.serialize(game)).append("\n");
+            count++;
+        }
+        return output.toString();
     }
 }

@@ -5,6 +5,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository("teams")
-public interface Teams extends MongoRepository<Team, String> {
+public interface TeamsRepository extends MongoRepository<Team, String> {
 
 }

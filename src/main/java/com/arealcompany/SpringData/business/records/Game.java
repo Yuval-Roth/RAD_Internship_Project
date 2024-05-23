@@ -1,5 +1,6 @@
 package com.arealcompany.SpringData.business.records;
 
+import java.util.List;
 import java.util.Map;
 
 public record Game(
@@ -12,11 +13,11 @@ public record Game(
         Periods periods,
         Arena arena,
         Map<String,Team> teams,
-        scores:
-        officials:
-        timesTied:5
-        leadChanges:6
-        nugget:null
+        Map<String,Score> scores,
+        List<String> officials,
+        Integer timesTied,
+        Integer leadChanges,
+        String nugget
 ) {
 
 }

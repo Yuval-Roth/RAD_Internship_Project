@@ -1,6 +1,7 @@
 package com.arealcompany.SpringData;
 
-import com.arealcompany.SpringData.repository.Teams;
+import com.arealcompany.SpringData.business.NbaController;
+import com.arealcompany.SpringData.repository.TeamsRepository;
 import com.arealcompany.SpringData.business.records.Team;
 import com.google.gson.Gson;
 import org.springframework.beans.BeansException;
@@ -27,26 +28,13 @@ public class Main implements ApplicationContextAware {
 		// download the data if the user wants to
 		if (response.equals("y")) {
 			System.out.println("Downloading NBA teams data...");
-			downloadNbaData();
+			context.getBean("nbaController", NbaController.class).fetchData();
 			System.out.println("Done!");
 		} else {
 			System.out.println("Skipping download.");
 		}
 
 		System.out.println("\nNBA teams data ready to be queried via the REST API on port 80.");
-	}
-
-	private static void downloadNbaData() {
-		Gson gson = new Gson();
-
-		// get the repository and clean it
-        MongoRepository<Team, String> repo = context.getBean(Teams.class);
-		repo.deleteAll();
-
-		// download the data and save it
-		String response = callAPI();
-
-		repo.saveAll(nbaData.response());
 	}
 
 
