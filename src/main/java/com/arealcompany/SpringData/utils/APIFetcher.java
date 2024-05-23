@@ -55,12 +55,12 @@ public class APIFetcher {
         return this;
     }
     public APIFetcher withHeader(String key, String value) {
-        headers.add(Pair.Of(key,value));
+        headers.add(Pair.of(key,value));
         return this;
     }
 
     public APIFetcher withParam(String key, String value) {
-        params.add(Pair.Of(key,value));
+        params.add(Pair.of(key,value));
         return this;
     }
 

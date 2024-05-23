@@ -1,11 +1,14 @@
 package com.arealcompany.SpringData.business.records;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.List;
 import java.util.Map;
 
+@Document(value = "games")
 public record Game(
         Integer id,
-        League league,
+        String league,
         Integer season,
         Date date,
         Integer stage,

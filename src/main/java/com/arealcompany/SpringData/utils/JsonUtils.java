@@ -43,7 +43,6 @@ public class JsonUtils {
     }
 
     private static final Gson gson =  new GsonBuilder()
-//            .setPrettyPrinting()
             .registerTypeAdapter(LocalDateTime.class,new LocalDateTimeAdapter())
             .registerTypeAdapter(LocalDate.class,new LocalDateAdapter())
             .registerTypeAdapter(LocalTime.class,new LocalTimeAdapter())

@@ -7,6 +7,8 @@ import com.arealcompany.SpringData.business.records.Team;
 import com.arealcompany.SpringData.utils.JsonUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.Example;
+import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,31 +28,27 @@ public class NbaApi {
 
     @GetMapping("/teams")
     public String getTeams(@RequestParam(value = "maxcount", defaultValue = "-1") Integer maxCount) {
-        List<Team> teams = teamsRepo.findAll();
+        List<Team> teams = maxCount < 0 ? teamsRepo.findAll() : teamsRepo.findAllLimit(maxCount);
         StringBuilder output = new StringBuilder();
-        int count = 0;
-        for (Team team : teams) {
-            if (maxCount >= 0 && count >= maxCount) {
-                break;
-            }
-            output.append(JsonUtils.serialize(team)).append("\n");
-            count++;
-        }
+        teams.forEach(team -> output.append(JsonUtils.serialize(team)).append("\n"));
         return output.toString();
     }
 
     @GetMapping("/games")
-    public String getGames(@RequestParam(value = "maxcount", defaultValue = "-1") Integer maxCount) {
-        List<Game> games = gamesRepo.findAll();
-        StringBuilder output = new StringBuilder();
-        int count = 0;
-        for (Game game : games) {
-            if (maxCount >= 0 && count >= maxCount) {
-                break;
-            }
-            output.append(JsonUtils.serialize(game)).append("\n");
-            count++;
+    public String getGames(@RequestParam(value = "maxcount", defaultValue = "-1") Integer maxCount,
+                           @RequestParam(value = "season", defaultValue = "-1") Integer season) {
+
+        List<Game> games;
+        if (season > 0) {
+            games = maxCount >= 0 ?
+                    gamesRepo.findBySeasonLimit(season, maxCount) : gamesRepo.findBySeason(season);
+        } else {
+            games = maxCount >= 0 ?
+                    gamesRepo.findAllLimit(maxCount) : gamesRepo.findAll();
         }
+
+        StringBuilder output = new StringBuilder();
+        games.forEach(game -> output.append(JsonUtils.serialize(game)).append("\n"));
         return output.toString();
     }
 }
