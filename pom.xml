@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.arealcompany</groupId>
-	<artifactId>SpringData</artifactId>
+	<artifactId>ms_nba</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>SpringData</name>
+	<name>ms_nba</name>
 	<description>Spring Data with mongoDB</description>
 	<properties>
 		<java.version>22</java.version>

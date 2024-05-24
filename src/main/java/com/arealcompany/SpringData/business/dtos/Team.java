@@ -1,4 +1,4 @@
-package com.arealcompany.SpringData.business.records;
+package com.arealcompany.SpringData.business.dtos;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,4 +14,10 @@ public record Team (
         String logo,
         Boolean allStar,
         Boolean nbaFranchise,
-        Map<String,League> leagues) { }
+        Map<String,League> leagues) {
+
+    private record League (
+            String conference,
+            String division
+    ) {}
+}

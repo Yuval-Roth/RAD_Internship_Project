@@ -1,4 +1,4 @@
-package com.arealcompany.SpringData.business.records;
+package com.arealcompany.SpringData.business.dtos;
 
 import java.util.List;
 import java.util.Map;
@@ -6,7 +6,7 @@ import java.util.Map;
 public record NbaApiResponse<T>(
         String get,
         Map<String,String> parameters,
-        List<String> errors,
+        Map<String,String> errors,
         Integer results,
         List<T> response
 ) {

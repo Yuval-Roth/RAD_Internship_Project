@@ -1,7 +1,6 @@
 package com.arealcompany.SpringData.repository;
 
-import com.arealcompany.SpringData.business.records.Team;
-import org.springframework.data.mongodb.core.mapping.Document;
+import com.arealcompany.SpringData.business.dtos.Team;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;

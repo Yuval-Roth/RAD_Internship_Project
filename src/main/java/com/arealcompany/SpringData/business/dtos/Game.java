@@ -1,4 +1,4 @@
-package com.arealcompany.SpringData.business.records;
+package com.arealcompany.SpringData.business.dtos;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,11 +10,11 @@ public record Game(
         Integer id,
         String league,
         Integer season,
-        Date date,
+        Map<String,String> date,
         Integer stage,
         Map<String,String> status,
         Periods periods,
-        Arena arena,
+        Map<String,String> arena,
         Map<String,Team> teams,
         Map<String,Score> scores,
         List<String> officials,
@@ -23,4 +23,19 @@ public record Game(
         String nugget
 ) {
 
+    private record Periods(
+            Integer current,
+            Integer total,
+            Boolean endOfPeriod
+    ) {
+    }
+
+    private record Score(
+            Integer win,
+            Integer loss,
+            Map<String,Integer> series,
+            List<String> linescore,
+            Integer points
+    ) {
+    }
 }
