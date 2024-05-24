@@ -34,12 +34,11 @@ public class NbaApi {
         return output.toString();
     }
 
-    @GetMapping(value = "/players",
-    produces={"application/json","application/xml"})
+    @GetMapping(value = "/players")
     public String getPlayers(@RequestParam(value = "limit", defaultValue = "-1") Integer limit) {
-        List<Player> games = limit < 0 ? playersRepo.findAll() : playersRepo.findAllLimit(limit);
+        List<Player> players = limit < 0 ? playersRepo.findAll() : playersRepo.findAllLimit(limit);
         StringBuilder output = new StringBuilder();
-        games.forEach(game -> output.append(JsonUtils.serialize(game)).append("\n"));
+        players.forEach(player -> output.append(JsonUtils.serialize(player)).append("\n"));
         output.deleteCharAt(output.length() - 1);
         return output.toString();
     }
