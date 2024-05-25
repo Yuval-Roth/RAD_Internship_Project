@@ -60,6 +60,7 @@ public class APIFetcher {
     }
 
     public APIFetcher withParam(String key, String value) {
+        value = value.replaceAll(" ", "%20");
         params.add(Pair.of(key,value));
         return this;
     }

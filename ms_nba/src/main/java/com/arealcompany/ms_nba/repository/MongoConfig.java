@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 import org.springframework.lang.NonNull;
 
 @Configuration
-public class NbaMongoConfig extends AbstractMongoClientConfiguration {
+public class MongoConfig extends AbstractMongoClientConfiguration {
 
     private static final String DB_NAME = "NBA_Data";
 
