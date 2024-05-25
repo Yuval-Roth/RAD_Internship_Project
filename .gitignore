@@ -33,3 +33,4 @@ build/
 .vscode/
 
 **/api_key.txt
+compiled_jars/*
