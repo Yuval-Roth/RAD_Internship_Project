@@ -38,11 +38,14 @@ public class PopulationController {
     }
 
     public String getCountry(String country){
-        PopulationStat byCountry = repo.findByCountry(country);
-        return JsonUtils.serialize(byCountry);
+        log.debug("Finding population data for country '{}'",country);
+        PopulationStat stat = repo.findByCountry(country);
+        log.debug(stat == null ? "Country not found" : "Country found");
+        return stat == null ? "Country not found" : JsonUtils.serialize(stat);
     }
 
     public String getGlobal(){
+        log.debug("Finding global population data");
         PopulationStat global = repo.findGlobal();
         return JsonUtils.serialize(global);
     }

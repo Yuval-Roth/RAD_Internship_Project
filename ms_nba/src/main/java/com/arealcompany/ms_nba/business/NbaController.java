@@ -84,7 +84,7 @@ public class NbaController {
         // fetch players
         teamsResponse.response().stream().limit(2).forEach(team -> {
             String fetched = fetch("players", Pair.of("season", PLAYERS_SEASON), Pair.of("team", team.id().toString()));
-            log.trace("Fetched players data from API");
+            log.trace("Fetched players data from API for team '{}'", team.id());
             NbaApiResponse<Player> playersResponse =
                     JsonUtils.deserialize(fetched, PLAYER_RESPONSE_TYPE);
             playersRepo.saveAll(playersResponse.response());
