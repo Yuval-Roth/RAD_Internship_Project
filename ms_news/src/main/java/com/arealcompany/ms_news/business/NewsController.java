@@ -7,6 +7,8 @@ import com.arealcompany.ms_news.utils.JsonUtils;
 import com.arealcompany.ms_news.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -17,6 +19,7 @@ public class NewsController {
     private static final String ENV_KEY_NAME = "GNEWS_KEY";
     private static final Logger log = LoggerFactory.getLogger(NewsController.class);
 
+    private static final String PORT = "8083";
     private final String apiKey;
 
     public NewsController() {
@@ -43,11 +46,18 @@ public class NewsController {
         return sb.toString();
     }
 
+
+
     @SafeVarargs
     private String fetch(String location, Pair<String,String>... params) {
         var fetcher = APIFetcher.create()
                 .withUri("https://gnews.io/api/v4/"+location);
         Arrays.stream(params).forEach(pair -> fetcher.withParam(pair.first(), pair.second()));
         return fetcher.fetch();
+    }
+
+    @EventListener
+    public void handleApplicationReadyEvent(ApplicationReadyEvent event) {
+        log.debug("News REST API is ready on port "+ PORT);
     }
 }
