@@ -1,7 +1,5 @@
 package com.arealcompany.ms_news.utils;
 
-import com.arealcompany.ms_news.exceptions.NegativeResponseException;
-
 import java.lang.reflect.Type;
 
 public class Response {
@@ -96,16 +94,6 @@ public class Response {
      */
     public static Response fromJson(String json){
         return JsonUtils.deserialize(json, Response.class);
-    }
-    
-    public static Response fromJsonWithValidation(String json) throws NegativeResponseException {
-        Response response = JsonUtils.deserialize(json, Response.class);
-        if (! response.success){
-            String causeMessage = response.data == null ? "" : response.data;
-            String message = response.message == null ? "" : response.message;
-            throw new NegativeResponseException(message, new Throwable(causeMessage));
-        }
-        return response;
     }
 
     /**
