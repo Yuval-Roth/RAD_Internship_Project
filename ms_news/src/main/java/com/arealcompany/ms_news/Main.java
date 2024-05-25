@@ -2,10 +2,10 @@ package com.arealcompany.ms_news;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
-@EnableMongoRepositories(basePackages = "com.arealcompany.ms_news")
 @SpringBootApplication
+@EnableDiscoveryClient
 public class Main {
 
     public static void main(String[] args) {

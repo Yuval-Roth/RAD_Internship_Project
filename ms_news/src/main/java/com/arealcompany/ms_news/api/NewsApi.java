@@ -15,7 +15,7 @@ public class NewsApi {
         this.newsController = newsController;
     }
 
-    @GetMapping("/news/top-headlines")
+    @GetMapping("/top-headlines")
     String fetchTopHeadlines(@RequestParam(value = "limit", defaultValue = "10") int limit){
         return newsController.fetchTopHeadlines(limit);
     }

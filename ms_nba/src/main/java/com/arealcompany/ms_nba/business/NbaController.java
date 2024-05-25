@@ -65,7 +65,7 @@ public class NbaController {
     public void handleApplicationReadyEvent(ApplicationReadyEvent event) {
         String[] args = event.getArgs();
         log.debug("Application started with arguments: {}", Arrays.toString(args));
-        if(args[0].equalsIgnoreCase("-fetch")) {
+        if(args.length > 0 && args[0].equalsIgnoreCase("-fetch")) {
             fetchData();
         }
         log.debug("\nNBA teams data ready to be queried via the REST API on port '{}'.",PORT);
