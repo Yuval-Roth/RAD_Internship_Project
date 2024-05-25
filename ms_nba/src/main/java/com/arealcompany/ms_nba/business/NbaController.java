@@ -5,10 +5,7 @@ import com.arealcompany.ms_nba.business.dtos.Player;
 import com.arealcompany.ms_nba.business.dtos.Team;
 import com.arealcompany.ms_nba.repository.PlayersRepository;
 import com.arealcompany.ms_nba.repository.TeamsRepository;
-import com.arealcompany.ms_nba.utils.APIFetcher;
-import com.arealcompany.ms_nba.utils.EnvUtils;
-import com.arealcompany.ms_nba.utils.JsonUtils;
-import com.arealcompany.ms_nba.utils.Pair;
+import com.arealcompany.ms_nba.utils.*;
 import com.google.gson.reflect.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,19 +42,13 @@ public class NbaController {
     public String getTeams(int limit){
         log.debug("Finding teams from DB with limit: {}", limit);
         List<Team> teams = limit < 0 ? teamsRepo.findAll() : teamsRepo.findAllLimit(limit);
-        StringBuilder output = new StringBuilder();
-        teams.forEach(team -> output.append(JsonUtils.serialize(team)).append("\n"));
-        output.deleteCharAt(output.length() - 1);
-        return output.toString();
+        return Response.get(teams);
     }
 
     public String getPlayers(int limit){
         log.debug("Finding players from DB with limit: {}", limit);
         List<Player> players = limit < 0 ? playersRepo.findAll() : playersRepo.findAllLimit(limit);
-        StringBuilder output = new StringBuilder();
-        players.forEach(player -> output.append(JsonUtils.serialize(player)).append("\n"));
-        output.deleteCharAt(output.length() - 1);
-        return output.toString();
+        return Response.get(players);
     }
 
     @EventListener

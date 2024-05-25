@@ -1,10 +1,7 @@
 package com.arealcompany.ms_news.business;
 
 import com.arealcompany.ms_news.business.dtos.GNewsResponse;
-import com.arealcompany.ms_news.utils.APIFetcher;
-import com.arealcompany.ms_news.utils.EnvUtils;
-import com.arealcompany.ms_news.utils.JsonUtils;
-import com.arealcompany.ms_news.utils.Pair;
+import com.arealcompany.ms_news.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -37,16 +34,10 @@ public class NewsController {
                 Pair.of("max",String.valueOf(limit)),
                 Pair.of("apikey",apiKey)
         );
-        GNewsResponse obj = JsonUtils.deserialize(response, GNewsResponse.class);
-        StringBuilder sb = new StringBuilder();
-        obj.articles().forEach(article -> sb.append(JsonUtils.serialize(article)).append("\n"));
-        sb.deleteCharAt(sb.length()-1);
-
         log.debug("Fetched successfully");
-        return sb.toString();
+        GNewsResponse obj = JsonUtils.deserialize(response, GNewsResponse.class);
+        return Response.get(obj.articles());
     }
-
-
 
     @SafeVarargs
     private String fetch(String location, Pair<String,String>... params) {

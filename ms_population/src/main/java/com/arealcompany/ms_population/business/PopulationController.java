@@ -2,10 +2,7 @@ package com.arealcompany.ms_population.business;
 
 import com.arealcompany.ms_population.business.dtos.PopulationStat;
 import com.arealcompany.ms_population.repository.PopulationRepository;
-import com.arealcompany.ms_population.utils.APIFetcher;
-import com.arealcompany.ms_population.utils.EnvUtils;
-import com.arealcompany.ms_population.utils.JsonUtils;
-import com.arealcompany.ms_population.utils.Pair;
+import com.arealcompany.ms_population.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -41,13 +38,13 @@ public class PopulationController {
         log.debug("Finding population data for country '{}'",country);
         PopulationStat stat = repo.findByCountry(country);
         log.debug(stat == null ? "Country not found" : "Country found");
-        return stat == null ? "Country not found" : JsonUtils.serialize(stat);
+        return stat == null ? "Country not found" : Response.get(stat);
     }
 
     public String getGlobal(){
         log.debug("Finding global population data");
         PopulationStat global = repo.findGlobal();
-        return JsonUtils.serialize(global);
+        return Response.get(global);
     }
 
     @EventListener
