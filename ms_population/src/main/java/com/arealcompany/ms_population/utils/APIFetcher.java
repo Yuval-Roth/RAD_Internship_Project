@@ -1,4 +1,4 @@
-package com.arealcompany.ms_news.utils;
+package com.arealcompany.ms_population.utils;
 
 import java.io.IOException;
 import java.net.URI;
