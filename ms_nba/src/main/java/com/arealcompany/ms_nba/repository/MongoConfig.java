@@ -11,7 +11,7 @@ import org.springframework.lang.NonNull;
 @Configuration
 public class MongoConfig extends AbstractMongoClientConfiguration {
 
-    private static final String DB_NAME = "NBA_Data";
+    private static final String DB_NAME = "nba_db";
 
     @Override
     @NonNull
