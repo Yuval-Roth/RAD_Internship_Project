@@ -1,12 +1,12 @@
 package com.arealcompany.ms_api_gateway.business;
 
 import com.arealcompany.ms_api_gateway.utils.APIFetcher;
-import com.arealcompany.ms_api_gateway.utils.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.netflix.eureka.EurekaDiscoveryClient;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -14,6 +14,7 @@ import java.util.NoSuchElementException;
 public class GatewayController {
 
     private static final String SERVICE_NOT_FOUND = "Service not found";
+    private static final Logger log = LoggerFactory.getLogger(GatewayController.class);
     private final EurekaDiscoveryClient discoveryClient;
 
     public GatewayController(EurekaDiscoveryClient discoveryClient) {
@@ -21,6 +22,8 @@ public class GatewayController {
     }
 
     public String forwardRequest(String service, String endpoint, Map<String,String> params) {
+
+        log.debug("Forwarding request to service: {} endpoint: {} params: {}", service, endpoint, params);
 
         //TODO: find a better way to do this
         String actualService = switch(service){
@@ -30,8 +33,11 @@ public class GatewayController {
         };
 
         if(actualService == null){
+            log.trace("actualService is null");
             return SERVICE_NOT_FOUND;
         }
+
+        log.trace("Actual service: {}", actualService);
 
         ServiceInstance serviceInstance;
         try{
@@ -39,6 +45,8 @@ public class GatewayController {
         } catch (NoSuchElementException ignored){
             return SERVICE_NOT_FOUND;
         }
+
+        log.trace("Forwarding to host: {}", serviceInstance.getHost());
 
         APIFetcher fetcher = APIFetcher.create()
                 .withUri(serviceInstance.getUri()+"/"+ endpoint);
