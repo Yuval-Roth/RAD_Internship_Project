@@ -1,4 +1,4 @@
-package com.arealcompany.ms_population.utils;
+package com.arealcompany.ms_api_gateway.utils;
 
 import java.io.IOException;
 import java.net.URI;

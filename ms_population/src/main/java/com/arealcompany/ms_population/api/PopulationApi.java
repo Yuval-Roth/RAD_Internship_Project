@@ -15,12 +15,12 @@ public class PopulationApi {
         this.controller = populationController;
     }
 
-    @GetMapping("/population")
+    @GetMapping("/")
     public String getGlobal(@RequestParam(value = "limit", defaultValue = "-1") Integer limit) {
         return controller.getGlobal();
     }
 
-    @GetMapping(value = "/population/{country}")
+    @GetMapping(value = "/{country}")
     public String getCountry(@PathVariable String country){
         return controller.getCountry(country);
     }

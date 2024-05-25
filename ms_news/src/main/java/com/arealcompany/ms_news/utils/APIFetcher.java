@@ -5,18 +5,20 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class APIFetcher {
 
     private String uri;
-    private final List<Pair<String,String>> headers;
-    private final List<Pair<String,String>> params;
+    private final Map<String,String> headers;
+    private final Map<String,String> params;
 
     private APIFetcher() {
-        headers = new LinkedList<>();
-        params = new LinkedList<>();
+        headers = new HashMap<>();
+        params = new HashMap<>();
     }
 
     public String fetch() {
@@ -24,20 +26,20 @@ public class APIFetcher {
         assert uri != null : "URI is required";
 
         // build full URI
-        String fullUri = params.stream()
+        String fullUri = params.entrySet().stream()
                 .reduce(uri,
-                        (acc, pair) -> "%s%s%s=%s".formatted(
+                        (acc, entry) -> "%s%s%s=%s".formatted(
                                 acc,
                                 (acc.contains("?") ? "&" : "?"),
-                                pair.first(),
-                                pair.second()),
+                                entry.getKey(),
+                                entry.getValue()),
                         (acc, _) -> acc);
 
         // build request
         var builder = HttpRequest.newBuilder()
                 .uri(URI.create(fullUri))
                 .method("GET", HttpRequest.BodyPublishers.noBody());
-        headers.forEach(pair -> builder.header(pair.first(), pair.second()));
+        headers.forEach(builder::header);
         HttpRequest request = builder.build();
 
         // send request
@@ -55,13 +57,13 @@ public class APIFetcher {
         return this;
     }
     public APIFetcher withHeader(String key, String value) {
-        headers.add(Pair.of(key,value));
+        headers.put(key,value);
         return this;
     }
 
     public APIFetcher withParam(String key, String value) {
         value = value.replaceAll(" ", "%20");
-        params.add(Pair.of(key,value));
+        params.put(key,value);
         return this;
     }
 

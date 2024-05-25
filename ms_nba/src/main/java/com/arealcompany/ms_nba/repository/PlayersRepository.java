@@ -1,6 +1,5 @@
 package com.arealcompany.ms_nba.repository;
 
-import com.arealcompany.ms_nba.business.dtos.Game;
 import com.arealcompany.ms_nba.business.dtos.Player;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
