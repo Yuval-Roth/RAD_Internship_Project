@@ -8,33 +8,16 @@
         <version>0.0.1-SNAPSHOT</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <artifactId>ms_api_gateway</artifactId>
+    <artifactId>ms_common</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>ms_api_gateway</name>
-    <description>ms_api_gateway</description>
+    <name>ms_common</name>
+    <description>ms_common</description>
     <properties>
         <java.version>22</java.version>
-        <spring-cloud.version>2023.0.1</spring-cloud.version>
     </properties>
+
     <dependencies>
-
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>
     </dependencies>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <plugins>

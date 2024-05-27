@@ -25,7 +25,7 @@ public class NewsProxyController {
         } catch(NoSuchElementException ignored) {
             return "Service not found";
         }
-        
+
         var fetcher = APIFetcher.create()
                 .withUri(ms_news.getUri() + "/top-headlines");
         params.forEach(fetcher::withParam);
