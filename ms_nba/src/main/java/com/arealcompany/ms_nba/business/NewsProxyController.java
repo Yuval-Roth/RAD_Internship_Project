@@ -5,6 +5,9 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.netflix.eureka.EurekaDiscoveryClient;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+import java.util.NoSuchElementException;
+
 @Component("newsProxyController")
 public class NewsProxyController {
 
@@ -14,11 +17,18 @@ public class NewsProxyController {
         this.discoveryClient = discoveryClient;
     }
 
-    public String getTopHeadlines(int limit) {
-        ServiceInstance ms_news = discoveryClient.getInstances("ms_news").getFirst();
-        return APIFetcher.create()
-                .withUri(ms_news.getUri() + "/top-headlines")
-                .withParam("limit", String.valueOf(limit))
-                .fetch();
+    public String getTopHeadlines(Map<String,String> params) {
+
+        ServiceInstance ms_news;
+        try{
+             ms_news = discoveryClient.getInstances("ms_news").getFirst();
+        } catch(NoSuchElementException ignored) {
+            return "Service not found";
+        }
+        
+        var fetcher = APIFetcher.create()
+                .withUri(ms_news.getUri() + "/top-headlines");
+        params.forEach(fetcher::withParam);
+        return fetcher.fetch();
     }
 }

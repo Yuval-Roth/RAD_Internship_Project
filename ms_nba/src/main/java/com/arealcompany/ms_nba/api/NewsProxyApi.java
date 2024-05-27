@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 public class NewsProxyApi {
 
@@ -15,7 +17,7 @@ public class NewsProxyApi {
     }
 
     @GetMapping("/top-headlines")
-    String getTopHeadlines(@RequestParam(value = "limit", defaultValue = "10") int limit){
-        return controller.getTopHeadlines(limit);
+    String getTopHeadlines(@RequestParam Map<String,String> params){
+        return controller.getTopHeadlines(params);
     }
 }

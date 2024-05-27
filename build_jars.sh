@@ -12,7 +12,7 @@ for dir in */ ; do
         cd "$dir" || exit
         
         # Run mvn package
-        mvn package
+        mvn clean package
         
         # Find the resulting JAR files and copy them with a new prefix to the destination directory
         find . -name "*.jar" | while read -r jar; do
