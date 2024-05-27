@@ -1,8 +1,8 @@
 package com.arealcompany.ms_population.business;
 
+import com.arealcompany.ms_common.utils.*;
 import com.arealcompany.ms_population.business.dtos.PopulationStat;
 import com.arealcompany.ms_population.repository.PopulationRepository;
-import com.arealcompany.ms_common.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;

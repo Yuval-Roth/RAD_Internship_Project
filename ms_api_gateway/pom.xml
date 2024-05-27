@@ -6,15 +6,14 @@
         <groupId>com.arealcompany</groupId>
         <artifactId>rad_intern_project</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath>../pom.xml</relativePath>
     </parent>
+
     <artifactId>ms_api_gateway</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>ms_api_gateway</name>
     <description>ms_api_gateway</description>
     <properties>
-        <java.version>22</java.version>
-        <spring-cloud.version>2023.0.1</spring-cloud.version>
+
     </properties>
     <dependencies>
 
@@ -22,19 +21,14 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
-    </dependencies>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+        <dependency>
+            <groupId>com.arealcompany</groupId>
+            <artifactId>ms_common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+    </dependencies>
 
     <build>
         <plugins>

@@ -1,6 +1,6 @@
 package com.arealcompany.ms_nba.business;
 
-import com.arealcompany.ms_nba.utils.APIFetcher;
+import com.arealcompany.ms_common.utils.APIFetcher;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.netflix.eureka.EurekaDiscoveryClient;
 import org.springframework.stereotype.Component;

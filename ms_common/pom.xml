@@ -6,15 +6,12 @@
         <groupId>com.arealcompany</groupId>
         <artifactId>rad_intern_project</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath>../pom.xml</relativePath>
     </parent>
+
     <artifactId>ms_common</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>ms_common</name>
     <description>ms_common</description>
-    <properties>
-        <java.version>22</java.version>
-    </properties>
 
     <dependencies>
     </dependencies>
