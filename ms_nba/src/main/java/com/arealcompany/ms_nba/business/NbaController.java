@@ -5,7 +5,7 @@ import com.arealcompany.ms_nba.business.dtos.Player;
 import com.arealcompany.ms_nba.business.dtos.Team;
 import com.arealcompany.ms_nba.repository.PlayersRepository;
 import com.arealcompany.ms_nba.repository.TeamsRepository;
-import com.arealcompany.ms_nba.utils.*;
+import com.arealcompany.ms_common.utils.*;
 import com.google.gson.reflect.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

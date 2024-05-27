@@ -1,6 +1,6 @@
 package com.arealcompany.ms_api_gateway.business;
 
-import com.arealcompany.ms_api_gateway.utils.APIFetcher;
+import com.arealcompany.ms_common.utils.APIFetcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.client.ServiceInstance;

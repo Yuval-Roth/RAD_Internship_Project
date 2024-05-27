@@ -1,7 +1,7 @@
 package com.arealcompany.ms_news.business;
 
 import com.arealcompany.ms_news.business.dtos.GNewsResponse;
-import com.arealcompany.ms_news.utils.*;
+import com.arealcompany.ms_common.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
