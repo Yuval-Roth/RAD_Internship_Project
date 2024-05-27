@@ -5,14 +5,14 @@ SUFFIX_PATTERN="-[0-9]*.[0-9]*.[0-9]*-SNAPSHOT"
 # Ensure the destination directory exists
 mkdir -p "$DESTINATION_DIR"
 
-# Traverse each subdirectory and run mvn package
+# Run mvn package
+mvn clean package
+
+# Traverse each subdirectory and copy jar
 for dir in */ ; do
-    if [ "$dir" != "compiled_jars/" ] && [ -d "$dir" ]; then
+    if [ "$dir" != "compiled_jars/" ] && [ "$dir" != "ms_common/" ] && [ -d "$dir" ]; then
         echo "Entering directory: $dir"
         cd "$dir" || exit
-        
-        # Run mvn package
-        mvn clean package
         
         # Find the resulting JAR files and copy them with a new prefix to the destination directory
         find . -name "*.jar" | while read -r jar; do
