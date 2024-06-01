@@ -6,9 +6,9 @@ import java.util.List;
 @SuppressWarnings({"unused", "FieldCanBeLocal"})
 public class Response<T> {
 
-    private final boolean success;
-    private final String error;
-    private final List<T> payload;
+    public final boolean success;
+    public final String error;
+    public final List<T> payload;
 
     private Response(boolean success, String error, List<T> payload) {
         this.success = success;
