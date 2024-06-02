@@ -35,10 +35,15 @@ public class PopulationController {
     }
 
     public String getCountry(String country){
-        log.debug("Finding population data for country '{}'",country);
-        PopulationStat stat = repo.findByCountry(country);
-        log.debug(stat == null ? "Country not found" : "Country found");
-        return stat == null ? "Country not found" : Response.get(stat);
+        if(country.equalsIgnoreCase("all")){
+            log.debug("Finding all population data");
+            return Response.get(repo.findAll());
+        } else {
+            log.debug("Finding population data for country '{}'",country);
+            PopulationStat stat = repo.findByCountry(country);
+            log.debug(stat == null ? "Country not found" : "Country found");
+            return stat == null ? "Country not found" : Response.get(stat);
+        }
     }
 
     public String getGlobal(){
