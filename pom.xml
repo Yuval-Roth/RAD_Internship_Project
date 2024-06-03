@@ -22,10 +22,10 @@
 
     <modules>
         <module>ms_common</module>
-        <module>ms_service_discovery</module>
         <module>ms_nba</module>
         <module>ms_news</module>
         <module>ms_population</module>
+        <module>ms_service_discovery</module>
         <module>ms_api_gateway</module>
         <module>client_vaadin</module>
     </modules>
@@ -44,11 +44,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.arealcompany</groupId>
-            <artifactId>ms_common</artifactId>
-        </dependency>
-
     </dependencies>
 
     <dependencyManagement>
@@ -65,16 +60,12 @@
                 <artifactId>ms_common</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>2.10.1</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

@@ -22,6 +22,11 @@
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.arealcompany</groupId>
+            <artifactId>ms_common</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

@@ -1,5 +1,7 @@
 package com.arealcompany.ms_common.utils;
 
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
