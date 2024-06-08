@@ -3,6 +3,7 @@ package com.arealcompany.ms_api_gateway.business;
 import com.arealcompany.ms_common.utils.APIFetcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.netflix.eureka.EurekaDiscoveryClient;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,13 @@ public class GatewayController {
     private static final Logger log = LoggerFactory.getLogger(GatewayController.class);
     private final EurekaDiscoveryClient discoveryClient;
 
+    @Value("${ms.nba.hostname}")
+    private String MS_NBA_HOSTNAME;
+    @Value("${ms.news.hostname}")
+    private String MS_NEWS_HOSTNAME;
+    @Value("${ms.population.hostname}")
+    private String MS_POPULATION_HOSTNAME;
+
     public GatewayController(EurekaDiscoveryClient discoveryClient) {
         this.discoveryClient = discoveryClient;
     }
@@ -25,10 +33,10 @@ public class GatewayController {
 
         log.debug("Forwarding request to service: {} endpoint: {} params: {}", service, endpoint, params);
 
-        //TODO: find a better way to do this
         String actualService = switch(service){
-            case "nba", "news" -> "ms_nba";
-            case "population" -> "ms_population";
+            case "nba" -> MS_NBA_HOSTNAME;
+            case "news" -> MS_NEWS_HOSTNAME;
+            case "population" -> MS_POPULATION_HOSTNAME;
             default -> null;
         };
 
