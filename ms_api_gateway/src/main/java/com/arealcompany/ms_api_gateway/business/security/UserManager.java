@@ -91,6 +91,17 @@ public class UserManager implements UserDetailsManager, AuthenticationManager {
                 .build();
     }
 
+    @Override
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        UserDetails userDetails = loadUserByUsername(authentication.getName());
+        String credentials = (String) authentication.getCredentials();
+        if(passwordsMatch(credentials, userDetails.getPassword())) {
+            return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        } else {
+            throw new AccessDeniedException("Bad credentials");
+        }
+    }
+
     @EventListener
     public void handleApplicationReadyEvent(ApplicationReadyEvent event) {
         if(!userExists("admin")) {
@@ -101,16 +112,5 @@ public class UserManager implements UserDetailsManager, AuthenticationManager {
     public void setSecurityContextHolderStrategy(SecurityContextHolderStrategy securityContextHolderStrategy) {
         Assert.notNull(securityContextHolderStrategy, "securityContextHolderStrategy cannot be null");
         this.securityContextHolderStrategy = securityContextHolderStrategy;
-    }
-
-    @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        UserDetails userDetails = loadUserByUsername(authentication.getName());
-        String credentials = (String) authentication.getCredentials();
-        if(passwordsMatch(credentials, userDetails.getPassword())) {
-            return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-        } else {
-            throw new AccessDeniedException("Bad credentials");
-        }
     }
 }

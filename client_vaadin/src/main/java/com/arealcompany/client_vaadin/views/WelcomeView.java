@@ -16,6 +16,9 @@ public class WelcomeView extends BaseLayout {
         H2 h1 = new H2(message);
         h1.getStyle().setAlignSelf(Style.AlignSelf.CENTER);
         content.add(h1);
+
+        appController.setUsername("admin");
+        appController.setPassword("adminpass");
         this.appController = appController;
     }
 }
