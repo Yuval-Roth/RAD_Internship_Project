@@ -3,6 +3,7 @@ package com.arealcompany.client_vaadin.views;
 import com.arealcompany.client_vaadin.Business.AppController;
 import com.arealcompany.client_vaadin.Business.dtos.Player;
 import com.arealcompany.client_vaadin.Business.dtos.PopulationStat;
+import com.arealcompany.client_vaadin.exceptions.ApplicationException;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
@@ -24,22 +25,26 @@ public class PopulationView extends BaseLayout {
         h1.getStyle().setAlignSelf(Style.AlignSelf.CENTER);
         content.add(h1);
 
+        List<PopulationStat> popStats = null;
+        try {
+            popStats = appController.getPopulationStats();
+            Grid<PopulationStat> grid = new Grid<>(PopulationStat.class, false);
+            Grid.Column<PopulationStat> countryC = grid.addColumn(PopulationStat::country).setHeader("Country").setSortable(true);
+            Grid.Column<PopulationStat> numberC = grid.addColumn(PopulationStat::readable_format).setHeader("Count").setSortable(true);
 
-        List<PopulationStat> popStats = appController.getPopulationStats();
-        Grid<PopulationStat> grid = new Grid<>(PopulationStat.class, false);
-        Grid.Column<PopulationStat> countryC = grid.addColumn(PopulationStat::country).setHeader("Country").setSortable(true);
-        Grid.Column<PopulationStat> numberC = grid.addColumn(PopulationStat::readable_format).setHeader("Count").setSortable(true);
+            HeaderRow hr = grid.appendHeaderRow();
+            PopulationFilter populationFilter = new PopulationFilter(grid.setItems(popStats));
+            hr.getCell(countryC).setComponent(createFilterHeader(populationFilter::setCountry));
+            hr.getCell(numberC).setComponent(createFilterHeader(populationFilter::setCount));
 
-        HeaderRow hr = grid.appendHeaderRow();
-        PopulationFilter populationFilter = new PopulationFilter(grid.setItems(popStats));
-        hr.getCell(countryC).setComponent(createFilterHeader(populationFilter::setCountry));
-        hr.getCell(numberC).setComponent(createFilterHeader(populationFilter::setCount));
+            grid.setWidth("50%");
+            grid.setHeight("500px");
+            grid.getStyle().setAlignSelf(Style.AlignSelf.CENTER);
 
-        grid.setWidth("50%");
-        grid.setHeight("500px");
-        grid.getStyle().setAlignSelf(Style.AlignSelf.CENTER);
-
-        content.add(grid);
+            content.add(grid);
+        } catch (ApplicationException e) {
+            openErrorDialog(e.getMessage());
+        }
     }
 
     private static class PopulationFilter {

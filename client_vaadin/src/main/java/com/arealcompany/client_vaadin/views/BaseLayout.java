@@ -1,18 +1,28 @@
 package com.arealcompany.client_vaadin.views;
 
 import com.arealcompany.client_vaadin.Business.AppController;
+import com.arealcompany.client_vaadin.Business.dtos.User;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
+import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,12 +59,21 @@ public abstract class BaseLayout extends AppLayout {
         title.getStyle().set("font-size", "var(--lumo-font-size-l)")
                 .set("margin", "0");
 
-
         Scroller scroller = new Scroller(sideNav);
         scroller.setClassName(LumoUtility.Padding.SMALL);
 
         addToDrawer(scroller);
         addToNavbar(toggle, title);
+
+        if(! User.isUserLoggedIn){
+            Button loginButton = new Button("Login", event -> openLoginDialog());
+            loginButton.getStyle().setMarginLeft("75%");
+            addToNavbar(loginButton);
+        } else {
+            H4 username = new H4("Hello, " + User.currentUser.username());
+            username.getStyle().set("margin-left", "70%");
+            addToNavbar(username);
+        }
     }
 
     protected static com.vaadin.flow.component.Component createFilterHeader(Consumer<String> filterChangeConsumer) {
@@ -70,5 +89,53 @@ public abstract class BaseLayout extends AppLayout {
         layout.getThemeList().add("spacing-xs");
 
         return layout;
+    }
+
+    protected void openLoginDialog() {
+        Dialog dialog = new Dialog();
+        VerticalLayout layout = new VerticalLayout();
+        FormLayout formLayout = new FormLayout();
+        TextField usernameField = new TextField("Username");
+        usernameField.setPlaceholder("Username");
+        PasswordField passwordField = new PasswordField("Password");
+        passwordField.setPlaceholder("Password");
+
+        Button submitButton = new Button("Submit", event -> {
+            String username = usernameField.getValue();
+            String password = passwordField.getValue();
+            // Perform login logic here
+            if ("user".equals(username) && "password".equals(password)) {
+                Notification.show("Login successful");
+                User.isUserLoggedIn = true;
+                User.currentUser = new User(username,"");
+                dialog.close();
+                UI.getCurrent().getPage().reload();
+            } else {
+                Notification.show("Login failed");
+            }
+        });
+        Button cancelButton = new Button("Cancel", event -> dialog.close());
+
+        formLayout.add(usernameField, passwordField, submitButton, cancelButton);
+        formLayout.setWidth("50%");
+        formLayout.getStyle().setAlignSelf(Style.AlignSelf.CENTER);
+        layout.add(formLayout);
+        dialog.add(layout);
+        content.add(dialog);
+        dialog.open();
+
+    }
+
+    protected void openErrorDialog(String message) {
+//        UI.getCurrent().getPage().getHistory().back();
+        Dialog dialog = new Dialog();
+        VerticalLayout layout = new VerticalLayout();
+        H1 h1 = new H1("Error");
+        H4 h4 = new H4(message);
+        Button closeButton = new Button("Close", event -> dialog.close());
+        layout.add(h1, h4, closeButton);
+        dialog.add(layout);
+        content.add(dialog);
+        dialog.open();
     }
 }

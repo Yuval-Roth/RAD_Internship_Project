@@ -19,7 +19,7 @@ public class APIFetcher {
         params = new HashMap<>();
     }
 
-    public String fetch() {
+    public String fetch() throws IOException, InterruptedException {
 
         assert uri != null : "URI is required";
 
@@ -42,10 +42,8 @@ public class APIFetcher {
 
         // send request
         HttpResponse<String> response;
-        try(HttpClient client = HttpClient.newHttpClient() ) {
+        try(HttpClient client = HttpClient.newHttpClient()) {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
         }
         return response.body();
     }

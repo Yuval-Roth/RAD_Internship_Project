@@ -2,6 +2,7 @@ package com.arealcompany.client_vaadin.views;
 
 import com.arealcompany.client_vaadin.Business.AppController;
 import com.arealcompany.client_vaadin.Business.dtos.Team;
+import com.arealcompany.client_vaadin.exceptions.ApplicationException;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.HeaderRow;
@@ -22,33 +23,37 @@ public class NbaTeamsView extends BaseLayout {
         super();
         this.appController = appController;
 
-        appController.getNbaTeams();
-
         H2 h1 = new H2("NBA Teams");
         h1.getStyle().setAlignSelf(Style.AlignSelf.CENTER);
         content.add(h1);
 
-        Grid<Team> grid = new Grid<>(Team.class,false);
-        Grid.Column<Team> idC = grid.addColumn(Team::id).setHeader("ID").setAutoWidth(true).setFlexGrow(0).setSortable(true);
-        Grid.Column<Team> nameC = grid.addColumn(Team::name).setHeader("Name").setAutoWidth(true).setFlexGrow(0).setSortable(true);
-        Grid.Column<Team> nicknameC = grid.addColumn(Team::nickname).setHeader("Nickname").setAutoWidth(true).setFlexGrow(0).setSortable(true);
-        grid.addColumn(Team::code).setHeader("Code").setAutoWidth(true).setFlexGrow(0).setSortable(true);
-        grid.addColumn(Team::city).setHeader("City").setAutoWidth(true).setFlexGrow(0).setSortable(true);
-        grid.addColumn(Team::allStar).setHeader("All Star").setAutoWidth(true).setFlexGrow(0).setSortable(true);
-        grid.addColumn(Team::nbaFranchise).setHeader("NBA Franchise").setSortable(true);
+        try{
+            List<Team> nbaTeams = appController.getNbaTeams();
 
-        List<Team> nbaTeams = appController.getNbaTeams();
-        GridListDataView<Team> dataView = grid.setItems(nbaTeams);
-        grid.setWidth("100%");
-        grid.setHeight(500, Unit.PIXELS);
+            Grid<Team> grid = new Grid<>(Team.class,false);
+            Grid.Column<Team> idC = grid.addColumn(Team::id).setHeader("ID").setAutoWidth(true).setFlexGrow(0).setSortable(true);
+            Grid.Column<Team> nameC = grid.addColumn(Team::name).setHeader("Name").setAutoWidth(true).setFlexGrow(0).setSortable(true);
+            Grid.Column<Team> nicknameC = grid.addColumn(Team::nickname).setHeader("Nickname").setAutoWidth(true).setFlexGrow(0).setSortable(true);
+            grid.addColumn(Team::code).setHeader("Code").setAutoWidth(true).setFlexGrow(0).setSortable(true);
+            grid.addColumn(Team::city).setHeader("City").setAutoWidth(true).setFlexGrow(0).setSortable(true);
+            grid.addColumn(Team::allStar).setHeader("All Star").setAutoWidth(true).setFlexGrow(0).setSortable(true);
+            grid.addColumn(Team::nbaFranchise).setHeader("NBA Franchise").setSortable(true);
 
-        TeamFilter teamFilter = new TeamFilter(dataView);
-        HeaderRow hr = grid.appendHeaderRow();
-        hr.getCell(idC).setComponent(createFilterHeader(teamFilter::setId));
-        hr.getCell(nameC).setComponent(createFilterHeader(teamFilter::setName));
-        hr.getCell(nicknameC).setComponent(createFilterHeader(teamFilter::setNickname));
 
-        content.add(grid);
+            GridListDataView<Team> dataView = grid.setItems(nbaTeams);
+            grid.setWidth("100%");
+            grid.setHeight(500, Unit.PIXELS);
+
+            TeamFilter teamFilter = new TeamFilter(dataView);
+            HeaderRow hr = grid.appendHeaderRow();
+            hr.getCell(idC).setComponent(createFilterHeader(teamFilter::setId));
+            hr.getCell(nameC).setComponent(createFilterHeader(teamFilter::setName));
+            hr.getCell(nicknameC).setComponent(createFilterHeader(teamFilter::setNickname));
+
+            content.add(grid);
+        } catch (ApplicationException e) {
+            openErrorDialog(e.getMessage());
+        }
     }
 
     private static class TeamFilter {

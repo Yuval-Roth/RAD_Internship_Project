@@ -8,6 +8,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 @Component("newsController")
@@ -44,7 +45,12 @@ public class NewsController {
         var fetcher = APIFetcher.create()
                 .withUri("https://gnews.io/api/v4/"+location);
         Arrays.stream(params).forEach(pair -> fetcher.withParam(pair.first(), pair.second()));
-        return fetcher.fetch();
+        try {
+            return fetcher.fetch();
+        } catch (IOException | InterruptedException e) {
+            log.error("Failed to fetch data from GNews API", e);
+            return Response.get("Failed to fetch data from GNews API");
+        }
     }
 
     @EventListener

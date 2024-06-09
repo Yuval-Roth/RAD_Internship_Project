@@ -1,7 +1,14 @@
 package com.arealcompany.client_vaadin.views;
 
 import com.arealcompany.client_vaadin.Business.AppController;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.PasswordField;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.Route;
 
@@ -17,8 +24,6 @@ public class WelcomeView extends BaseLayout {
         h1.getStyle().setAlignSelf(Style.AlignSelf.CENTER);
         content.add(h1);
 
-        appController.setUsername("admin");
-        appController.setPassword("adminpass");
         this.appController = appController;
     }
 }

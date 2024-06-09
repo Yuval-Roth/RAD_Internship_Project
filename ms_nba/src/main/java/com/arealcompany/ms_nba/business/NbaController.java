@@ -13,6 +13,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
@@ -91,7 +92,12 @@ public class NbaController {
                 .withHeader("X-RapidAPI-Key", apiKey)
                 .withHeader("X-RapidAPI-Host", "api-nba-v1.p.rapidapi.com");
         Arrays.stream(params).forEach(pair -> fetcher.withParam(pair.first(), pair.second()));
-        return fetcher.fetch();
+        try {
+            return fetcher.fetch();
+        } catch (IOException | InterruptedException e) {
+            log.error("Failed to fetch data from API", e);
+            return Response.get("Failed to fetch data from API");
+        }
     }
 
 }

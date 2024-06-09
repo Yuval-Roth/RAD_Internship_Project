@@ -2,6 +2,7 @@ package com.arealcompany.client_vaadin.views;
 
 import com.arealcompany.client_vaadin.Business.AppController;
 import com.arealcompany.client_vaadin.Business.dtos.Player;
+import com.arealcompany.client_vaadin.exceptions.ApplicationException;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.grid.Grid;
@@ -32,28 +33,33 @@ public class NbaPlayersView extends BaseLayout {
         h1.getStyle().setAlignSelf(Style.AlignSelf.CENTER);
         content.add(h1);
 
-        Grid<Player> grid = new Grid<>(Player.class,false);
-        Grid.Column<Player> playerC = grid.addColumn(Player::id).setHeader("ID").setAutoWidth(true).setFlexGrow(0).setSortable(true);
-        Grid.Column<Player> firstNameC = grid.addColumn(Player::firstname).setHeader("First Name").setAutoWidth(true).setFlexGrow(0).setSortable(true);
-        Grid.Column<Player> lastNameC = grid.addColumn(Player::lastname).setHeader("Last Name").setAutoWidth(true).setFlexGrow(0).setSortable(true);
-        grid.addColumn(Player::height).setHeader("Height").setAutoWidth(true).setFlexGrow(0).setSortable(true);
-        grid.addColumn(Player::birth).setHeader("Birth").setAutoWidth(true).setFlexGrow(0).setSortable(true);
-        grid.addColumn(Player::affiliation).setHeader("Affiliation").setSortable(true);
+        try{
 
-        List<Player> nbaPlayers = appController.getNbaPlayers();
-        GridListDataView<Player> dataView = grid.setItems(nbaPlayers);
-        grid.setWidth("100%");
-        grid.setHeight(500, Unit.PIXELS);
+            List<Player> nbaPlayers = appController.getNbaPlayers();
+            Grid<Player> grid = new Grid<>(Player.class,false);
+            Grid.Column<Player> playerC = grid.addColumn(Player::id).setHeader("ID").setAutoWidth(true).setFlexGrow(0).setSortable(true);
+            Grid.Column<Player> firstNameC = grid.addColumn(Player::firstname).setHeader("First Name").setAutoWidth(true).setFlexGrow(0).setSortable(true);
+            Grid.Column<Player> lastNameC = grid.addColumn(Player::lastname).setHeader("Last Name").setAutoWidth(true).setFlexGrow(0).setSortable(true);
+            grid.addColumn(Player::height).setHeader("Height").setAutoWidth(true).setFlexGrow(0).setSortable(true);
+            grid.addColumn(Player::birth).setHeader("Birth").setAutoWidth(true).setFlexGrow(0).setSortable(true);
+            grid.addColumn(Player::affiliation).setHeader("Affiliation").setSortable(true);
 
-        PlayerFilter playerFilter = new PlayerFilter(dataView);
+            GridListDataView<Player> dataView = grid.setItems(nbaPlayers);
+            grid.setWidth("100%");
+            grid.setHeight(500, Unit.PIXELS);
 
-        HeaderRow hr = grid.appendHeaderRow();
-        hr.getCell(playerC).setComponent(createFilterHeader(playerFilter::setId));
-        hr.getCell(firstNameC).setComponent(createFilterHeader(playerFilter::setFirstName));
-        hr.getCell(lastNameC).setComponent(createFilterHeader(playerFilter::setLastName));
+            PlayerFilter playerFilter = new PlayerFilter(dataView);
+
+            HeaderRow hr = grid.appendHeaderRow();
+            hr.getCell(playerC).setComponent(createFilterHeader(playerFilter::setId));
+            hr.getCell(firstNameC).setComponent(createFilterHeader(playerFilter::setFirstName));
+            hr.getCell(lastNameC).setComponent(createFilterHeader(playerFilter::setLastName));
 
 
-        content.add(grid);
+            content.add(grid);
+        } catch (ApplicationException e) {
+            openErrorDialog(e.getMessage());
+        }
     }
 
     private static class PlayerFilter {

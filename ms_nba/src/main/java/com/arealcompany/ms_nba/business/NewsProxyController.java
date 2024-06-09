@@ -5,6 +5,7 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.netflix.eureka.EurekaDiscoveryClient;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -29,6 +30,10 @@ public class NewsProxyController {
         var fetcher = APIFetcher.create()
                 .withUri(ms_news.getUri() + "/top-headlines");
         params.forEach(fetcher::withParam);
-        return fetcher.fetch();
+        try {
+            return fetcher.fetch();
+        } catch (IOException | InterruptedException e) {
+            return "Failed to reach service";
+        }
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -93,7 +94,12 @@ public class PopulationController {
                 .withHeader("X-RapidAPI-Key", apiKey)
                 .withHeader("X-RapidAPI-Host", "get-population.p.rapidapi.com");
         Arrays.stream(params).forEach(pair -> fetcher.withParam(pair.first(), pair.second()));
-        return fetcher.fetch();
+        try {
+            return fetcher.fetch();
+        } catch (IOException | InterruptedException e) {
+            log.error("Failed to fetch data from API", e);
+            return Response.get("Failed to fetch data from API");
+        }
     }
 
 }
