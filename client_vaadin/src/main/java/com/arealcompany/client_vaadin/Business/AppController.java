@@ -3,13 +3,13 @@ package com.arealcompany.client_vaadin.Business;
 import com.arealcompany.client_vaadin.Business.dtos.*;
 import com.arealcompany.client_vaadin.exceptions.ApplicationException;
 import com.arealcompany.ms_common.utils.APIFetcher;
-import com.arealcompany.ms_common.utils.JsonUtils;
 import com.arealcompany.ms_common.utils.Response;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.JsonSyntaxException;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -37,19 +37,42 @@ public class AppController {
         return fetch("population/all",PopulationStat.class);
     }
 
-    private <T> List<T> fetch(String location, Type t) throws ApplicationException {
-//        String auth = "Basic " + new String(Base64.getEncoder().encode("%s:%s".formatted(username,password).getBytes()));
-        String auth = "auth";
-        String fetched;
+    public boolean login(String username, String password) {
+        User.currentUser = new User(username, password);
+        List<Boolean> fetched;
         try {
-            fetched = APIFetcher.create()
+            fetched = fetch("auth",Boolean.class);
+        } catch (ApplicationException e) {
+            return false;
+        }
+        Boolean success = fetched.getFirst();
+        if(success) {
+            User.isUserLoggedIn = true;
+        } else {
+            User.currentUser = null;
+        }
+        return success;
+    }
+
+    private <T> List<T> fetch(String location, Type t) throws ApplicationException {
+        ApplicationException fetchFailed = new ApplicationException("Failed to fetch data");
+
+        User user = User.currentUser;
+        String authString = "%s:%s".formatted(user.username(), user.password());
+        String auth = "Basic " + new String(Base64.getEncoder().encode(authString.getBytes()));
+        Response response;
+        try {
+            String fetched = APIFetcher.create()
                     .withUri(API_URI + location)
                     .withHeader("Authorization", auth)
                     .fetch();
-        } catch (IOException | InterruptedException e) {
-            throw new ApplicationException("Failed to fetch data");
+            response = Response.fromJson(fetched);
+        } catch (IOException | InterruptedException | JsonSyntaxException e) {
+            throw fetchFailed;
         }
-        Response response = Response.fromJson(fetched);
+        if(response == null){
+            throw fetchFailed;
+        }
         if(response.success()) {
             return response.payload(t);
         } else {

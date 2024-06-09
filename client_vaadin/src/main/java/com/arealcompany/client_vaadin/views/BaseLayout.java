@@ -35,8 +35,9 @@ import java.util.function.Consumer;
 public abstract class BaseLayout extends AppLayout {
 
     protected final VerticalLayout content;
+    private final AppController appController;
 
-    public BaseLayout() {
+    public BaseLayout(AppController appController) {
         content = new VerticalLayout();
         setContent(content);
 
@@ -71,9 +72,16 @@ public abstract class BaseLayout extends AppLayout {
             addToNavbar(loginButton);
         } else {
             H4 username = new H4("Hello, " + User.currentUser.username());
-            username.getStyle().set("margin-left", "70%");
-            addToNavbar(username);
+            username.getStyle().set("margin-left", "65%");
+            Button logoutButton = new Button("Logout", event -> {
+                User.isUserLoggedIn = false;
+                User.currentUser = null;
+                UI.getCurrent().getPage().setLocation("/");
+            });
+            logoutButton.getStyle().set("margin-left", "50px");
+            addToNavbar(username, logoutButton);
         }
+        this.appController = appController;
     }
 
     protected static com.vaadin.flow.component.Component createFilterHeader(Consumer<String> filterChangeConsumer) {
@@ -104,10 +112,8 @@ public abstract class BaseLayout extends AppLayout {
             String username = usernameField.getValue();
             String password = passwordField.getValue();
             // Perform login logic here
-            if ("user".equals(username) && "password".equals(password)) {
+            if (appController.login(username, password)) {
                 Notification.show("Login successful");
-                User.isUserLoggedIn = true;
-                User.currentUser = new User(username,"");
                 dialog.close();
                 UI.getCurrent().getPage().reload();
             } else {
@@ -121,13 +127,18 @@ public abstract class BaseLayout extends AppLayout {
         formLayout.getStyle().setAlignSelf(Style.AlignSelf.CENTER);
         layout.add(formLayout);
         dialog.add(layout);
+        dialog.addOpenedChangeListener(event -> {
+            if (!event.isOpened()) {
+                UI.getCurrent().getPage().setLocation("/");
+            }
+        });
+
         content.add(dialog);
         dialog.open();
 
     }
 
     protected void openErrorDialog(String message) {
-//        UI.getCurrent().getPage().getHistory().back();
         Dialog dialog = new Dialog();
         VerticalLayout layout = new VerticalLayout();
         H1 h1 = new H1("Error");

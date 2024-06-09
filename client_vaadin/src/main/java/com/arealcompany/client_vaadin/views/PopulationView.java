@@ -3,6 +3,7 @@ package com.arealcompany.client_vaadin.views;
 import com.arealcompany.client_vaadin.Business.AppController;
 import com.arealcompany.client_vaadin.Business.dtos.Player;
 import com.arealcompany.client_vaadin.Business.dtos.PopulationStat;
+import com.arealcompany.client_vaadin.Business.dtos.User;
 import com.arealcompany.client_vaadin.exceptions.ApplicationException;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.HeaderRow;
@@ -18,16 +19,20 @@ public class PopulationView extends BaseLayout {
     private final AppController appController;
 
     public PopulationView(AppController appController) {
-        super();
+        super(appController);
         this.appController = appController;
 
         H2 h1 = new H2("Population");
         h1.getStyle().setAlignSelf(Style.AlignSelf.CENTER);
         content.add(h1);
 
-        List<PopulationStat> popStats = null;
+        if(!User.isUserLoggedIn){
+            openLoginDialog();
+            return;
+        }
+
         try {
-            popStats = appController.getPopulationStats();
+            List<PopulationStat> popStats = appController.getPopulationStats();
             Grid<PopulationStat> grid = new Grid<>(PopulationStat.class, false);
             Grid.Column<PopulationStat> countryC = grid.addColumn(PopulationStat::country).setHeader("Country").setSortable(true);
             Grid.Column<PopulationStat> numberC = grid.addColumn(PopulationStat::readable_format).setHeader("Count").setSortable(true);

@@ -18,7 +18,7 @@ public class WelcomeView extends BaseLayout {
     private final AppController appController;
 
     public WelcomeView(AppController appController) {
-        super();
+        super(appController);
         String message = appController.getWelcomeMessage();
         H2 h1 = new H2(message);
         h1.getStyle().setAlignSelf(Style.AlignSelf.CENTER);

@@ -2,6 +2,7 @@ package com.arealcompany.client_vaadin.views;
 
 import com.arealcompany.client_vaadin.Business.AppController;
 import com.arealcompany.client_vaadin.Business.dtos.Article;
+import com.arealcompany.client_vaadin.Business.dtos.User;
 import com.arealcompany.client_vaadin.exceptions.ApplicationException;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
@@ -26,12 +27,17 @@ public class NewsView extends BaseLayout {
     private final AppController appController;
 
     public NewsView(AppController appController) {
-        super();
+        super(appController);
         this.appController = appController;
 
         H2 h1 = new H2("News");
         h1.getStyle().setAlignSelf(Style.AlignSelf.CENTER);
         content.add(h1);
+
+        if(!User.isUserLoggedIn){
+            openLoginDialog();
+            return;
+        }
 
         try{
 

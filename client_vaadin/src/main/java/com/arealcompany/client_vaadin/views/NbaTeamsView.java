@@ -2,6 +2,7 @@ package com.arealcompany.client_vaadin.views;
 
 import com.arealcompany.client_vaadin.Business.AppController;
 import com.arealcompany.client_vaadin.Business.dtos.Team;
+import com.arealcompany.client_vaadin.Business.dtos.User;
 import com.arealcompany.client_vaadin.exceptions.ApplicationException;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.grid.Grid;
@@ -20,12 +21,17 @@ public class NbaTeamsView extends BaseLayout {
     private final AppController appController;
 
     public NbaTeamsView(AppController appController) {
-        super();
+        super(appController);
         this.appController = appController;
 
         H2 h1 = new H2("NBA Teams");
         h1.getStyle().setAlignSelf(Style.AlignSelf.CENTER);
         content.add(h1);
+
+        if(!User.isUserLoggedIn){
+            openLoginDialog();
+            return;
+        }
 
         try{
             List<Team> nbaTeams = appController.getNbaTeams();

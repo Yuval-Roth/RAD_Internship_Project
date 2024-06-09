@@ -1,6 +1,7 @@
 package com.arealcompany.ms_api_gateway.api;
 
 import com.arealcompany.ms_api_gateway.business.GatewayController;
+import com.arealcompany.ms_common.utils.Response;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,5 +30,10 @@ public class GatewayApi {
                                  @PathVariable String endpoint,
                                  @RequestParam Map<String,String> params){
         return controller.forwardRequest(service, endpoint, params);
+    }
+
+    @GetMapping("/auth")
+    public String auth() {
+        return Response.get(true);
     }
 }
