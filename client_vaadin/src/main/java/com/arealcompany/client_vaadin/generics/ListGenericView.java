@@ -103,6 +103,9 @@ public class ListGenericView<T> extends VerticalLayout {
         }
     }
 
+    //TODO: this is extremely wasteful, we can filter the list without
+    // fetching all the data all the time.
+    // You can see how it's done in the views classes
     private void updateList() {
         try {
             List<T> items = appController.fetchByEndpoint(tableName, clazz);
