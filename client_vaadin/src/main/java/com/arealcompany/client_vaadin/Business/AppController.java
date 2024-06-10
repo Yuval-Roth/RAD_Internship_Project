@@ -22,7 +22,7 @@ public class AppController {
     }
 
     public List<Player> getNbaPlayers() throws ApplicationException {
-        return fetch("nba/players",Player.class);
+        return fetch("nba/get/players",Player.class);
     }
 
     public List<Team> getNbaTeams() throws ApplicationException {
