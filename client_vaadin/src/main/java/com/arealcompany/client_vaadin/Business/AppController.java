@@ -26,15 +26,15 @@ public class AppController {
     }
 
     public List<Team> getNbaTeams() throws ApplicationException {
-        return fetch("nba/teams",Team.class);
+        return fetch("nba/get/teams",Team.class);
     }
 
     public List<Article> getArticles() throws ApplicationException {
-        return fetch("news/top-headlines", Article.class);
+        return fetch("news/get/top-headlines", Article.class);
     }
 
     public List<PopulationStat> getPopulationStats() throws ApplicationException {
-        return fetch("population/all",PopulationStat.class);
+        return fetch("population/get/all",PopulationStat.class);
     }
 
     public boolean login(String username, String password) {
