@@ -34,7 +34,7 @@ public class AppController {
         User.currentUser = new User(username, password);
         List<Boolean> fetched;
         try {
-            fetched = fetch("auth", Boolean.class);
+            fetched = fetchByEndpoint(Endpoints.LOGIN);
         } catch (ApplicationException e) {
             return false;
         }
