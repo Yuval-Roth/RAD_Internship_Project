@@ -47,54 +47,6 @@ public class AppController {
         return success;
     }
 
-    public <T> void updateEntity(String endpoint, T entity) throws ApplicationException {
-        String auth = getAuth();
-
-        try {
-            String jsonInputString = JsonUtils.serialize(entity);
-
-            String response = APIFetcher.create()
-                    .withUri(API_URI + endpoint)
-                    .withHeader("Authorization", auth)
-                    .withHeader("Content-Type", "application/json")
-                    .withBody(jsonInputString)
-                    .withPost() // Assuming your API accepts POST for update. Use .withPut() if PUT is required
-                    .fetch();
-
-            if (response == null || response.isEmpty()) {
-                throw new ApplicationException("Failed to update entity, empty response from server");
-            }
-
-            // Optional: Parse response to check for success, if needed
-            Response parsedResponse = Response.fromJson(response);
-            if (!parsedResponse.success()) {
-                throw new ApplicationException("Failed to update entity: " + parsedResponse.message());
-            }
-
-        } catch (IOException | InterruptedException e) {
-            throw new ApplicationException("Failed to update entity", e);
-        }
-    }
-
-    public <T> void deleteEntity(String location, T entity) throws ApplicationException {
-        ApplicationException deleteFailed = new ApplicationException("Failed to delete entity");
-
-        User user = User.currentUser;
-        String credentialsString = "%s:%s".formatted(user.username(), user.password());
-        String auth = "Basic " + Base64.getEncoder().encodeToString(credentialsString.getBytes());
-        String requestBody = JsonUtils.serialize(entity);
-        try {
-            APIFetcher.create()
-                    .withUri(API_URI + location)
-                    .withHeader("Authorization", auth)
-                    .withBody(requestBody)
-                    // .withDelete()
-                    .fetch();
-        } catch (IOException | InterruptedException e) {
-            throw deleteFailed;
-        }
-    }
-
     private <T> List<T> fetch(String location, Type t) throws ApplicationException {
         ApplicationException fetchFailed = new ApplicationException("Failed to fetch data");
 
