@@ -9,7 +9,6 @@ import java.util.Map;
 @RestController
 public class GatewayApi {
 
-
     private final com.arealcompany.ms_api_gateway.business.GatewayController controller;
 
     public GatewayApi(GatewayController GatewayController) {
@@ -19,25 +18,26 @@ public class GatewayApi {
     @GetMapping("/{service}")
     public String forwardRequest(@PathVariable String service,
                                  @RequestParam Map<String,String> params){
-        return controller.forwardRequest(service, "", params);
+        return controller.forwardRequest(service,"get", "", params);
     }
 
-    @GetMapping("/{service}/{endpoint}")
+    @GetMapping("/{service}/get/{endpoint}")
     public String forwardRequest(@PathVariable String service,
                                  @PathVariable String endpoint,
                                  @RequestParam Map<String,String> params){
-        return controller.forwardRequest(service, endpoint, params);
+        return controller.forwardRequest(service,"get", endpoint, params);
+    }
+
+    @PostMapping("/{service}/update/{endpoint}")
+    public String forwardRequestPost(@PathVariable String service,
+                                     @PathVariable String endpoint,
+                                     @RequestParam Map<String,String> params,
+                                     @RequestBody String body){
+        return controller.forwardRequest(service, "update", endpoint, params);
     }
 
     @GetMapping("/auth")
     public String auth() {
         return Response.get(true);
-    }
-
-    @PostMapping("/{service}/update/{endpoint}")
-    public String update(@PathVariable String service,
-                         @PathVariable String endpoint,
-                         @RequestBody String body){
-        return controller.update(service, endpoint, body);
     }
 }
