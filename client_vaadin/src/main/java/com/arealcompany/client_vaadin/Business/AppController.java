@@ -58,8 +58,8 @@ public class AppController {
         ApplicationException fetchFailed = new ApplicationException("Failed to fetch data");
 
         User user = User.currentUser;
-        String authString = "%s:%s".formatted(user.username(), user.password());
-        String auth = "Basic " + new String(Base64.getEncoder().encode(authString.getBytes()));
+        String credentialsString = "%s:%s".formatted(user.username(), user.password());
+        String auth = "Basic " + new String(Base64.getEncoder().encode(credentialsString.getBytes()));
         Response response;
         try {
             String fetched = APIFetcher.create()
