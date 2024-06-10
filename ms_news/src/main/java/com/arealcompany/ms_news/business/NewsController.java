@@ -43,8 +43,8 @@ public class NewsController {
     @SafeVarargs
     private String fetch(String location, Pair<String,String>... params) {
         var fetcher = APIFetcher.create()
-                .withUri("https://gnews.io/api/v4/"+location);
-        Arrays.stream(params).forEach(pair -> fetcher.withParam(pair.first(), pair.second()));
+                .withUri("https://gnews.io/api/v4/"+location)
+                .withParams(params);
         try {
             return fetcher.fetch();
         } catch (IOException | InterruptedException e) {
