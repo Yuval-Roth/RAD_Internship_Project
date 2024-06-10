@@ -19,6 +19,8 @@ public class APIFetcher {
         params = new HashMap<>();
     }
 
+    //TODO: add support for POST requests
+
     public String fetch() throws IOException, InterruptedException {
 
         assert uri != null : "URI is required";

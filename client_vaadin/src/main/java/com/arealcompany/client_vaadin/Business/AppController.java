@@ -79,4 +79,10 @@ public class AppController {
             throw new ApplicationException(response.message());
         }
     }
+
+    //a method for updating an object and sending it to the backend
+    public <T> void updateObject(T object, String location) throws ApplicationException {
+
+    }
+
 }

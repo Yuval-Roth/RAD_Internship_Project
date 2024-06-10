@@ -67,4 +67,8 @@ public class GatewayController {
             return "Failed to reach service";
         }
     }
+
+    public String update(String service, String endpoint, String body) {
+        return "";
+    }
 }

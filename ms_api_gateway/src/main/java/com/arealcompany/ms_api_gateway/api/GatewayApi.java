@@ -2,10 +2,7 @@ package com.arealcompany.ms_api_gateway.api;
 
 import com.arealcompany.ms_api_gateway.business.GatewayController;
 import com.arealcompany.ms_common.utils.Response;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -35,5 +32,12 @@ public class GatewayApi {
     @GetMapping("/auth")
     public String auth() {
         return Response.get(true);
+    }
+
+    @PostMapping("/{service}/update/{endpoint}")
+    public String update(@PathVariable String service,
+                         @PathVariable String endpoint,
+                         @RequestBody String body){
+        return controller.update(service, endpoint, body);
     }
 }
