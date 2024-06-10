@@ -16,7 +16,7 @@ public enum Endpoints {
     DELETE_TEAM("nba/delete/team", Boolean.class),
     DELETE_PLAYER("nba/delete/player", Boolean.class),
     DELETE_POPULATION("population/delete", Boolean.class),
-    LOGIN("auth/login", Boolean.class);
+    LOGIN("auth", Boolean.class);
 
     private final String location;
     private final Class<?> clazz;
