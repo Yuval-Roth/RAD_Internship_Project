@@ -11,42 +11,23 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Base64;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class AppController {
 
     private static final String API_URI = "http://localhost:8080/";
-    private final Map<String, String> TABLE_ENDPOINT_MAP = new HashMap<>();
-
-    public AppController() {
-        TABLE_ENDPOINT_MAP.put("players", "nba/players");
-        TABLE_ENDPOINT_MAP.put("teams", "nba/teams");
-        TABLE_ENDPOINT_MAP.put("population", "population/all");
-        TABLE_ENDPOINT_MAP.put("news", "news/top-headlines");
-        // Add more mappings as needed
-    }
 
     public String getWelcomeMessage() {
         return "Welcome to my app!";
     }
 
-    public List<Player> getNbaPlayers() throws ApplicationException {
-        return fetch("nba/players", Player.class);
+    public <T> List<T> fetchByEndpoint(Endpoints endpoint) throws ApplicationException {
+        return fetch(endpoint.location(), endpoint.clazz());
     }
 
-    public List<Team> getNbaTeams() throws ApplicationException {
-        return fetch("nba/teams", Team.class);
-    }
-
-    public List<Article> getArticles() throws ApplicationException {
-        return fetch("news/top-headlines", Article.class);
-    }
-
-    public List<PopulationStat> getPopulationStats() throws ApplicationException {
-        return fetch("population/all", PopulationStat.class);
+    public void postByEndpoint(Endpoints endpoint, Object entity) throws ApplicationException {
+        post(endpoint.location(), entity);
     }
 
     public boolean login(String username, String password) {
@@ -66,44 +47,8 @@ public class AppController {
         return success;
     }
 
-    private <T> List<T> fetch(String location, Type t) throws ApplicationException {
-        ApplicationException fetchFailed = new ApplicationException("Failed to fetch data");
-
-        User user = User.currentUser;
-        String credentialsString = "%s:%s".formatted(user.username(), user.password());
-        String auth = "Basic " + new String(Base64.getEncoder().encode(credentialsString.getBytes()));
-        Response response;
-        try {
-            String fetched = APIFetcher.create()
-                    .withUri(API_URI + location)
-                    .withHeader("Authorization", auth)
-                    .fetch();
-            response = Response.fromJson(fetched);
-        } catch (IOException | InterruptedException | JsonSyntaxException e) {
-            throw fetchFailed;
-        }
-        if (response == null) {
-            throw fetchFailed;
-        }
-        if (response.success()) {
-            return response.payload(t);
-        } else {
-            throw new ApplicationException(response.message());
-        }
-    }
-
-    public <T> List<T> fetchItemsByTableName(String tableName, Class<T> clazz) throws ApplicationException {
-        String location = TABLE_ENDPOINT_MAP.get(tableName);
-        if (location == null) {
-            throw new ApplicationException("Invalid table name: " + tableName);
-        }
-        return fetch(location, clazz);
-    }
-
     public <T> void updateEntity(String endpoint, T entity) throws ApplicationException {
-        User user = User.currentUser;
-        String credentialsString = "%s:%s".formatted(user.username(), user.password());
-        String auth = "Basic " + new String(Base64.getEncoder().encode(credentialsString.getBytes()));
+        String auth = getAuth();
 
         try {
             String jsonInputString = JsonUtils.serialize(entity);
@@ -150,4 +95,59 @@ public class AppController {
         }
     }
 
+    private <T> List<T> fetch(String location, Type t) throws ApplicationException {
+        ApplicationException fetchFailed = new ApplicationException("Failed to fetch data");
+
+        String auth = getAuth();
+        Response response;
+        try {
+            String fetched = APIFetcher.create()
+                    .withUri(API_URI + location)
+                    .withHeader("Authorization", auth)
+                    .fetch();
+            response = Response.fromJson(fetched);
+        } catch (IOException | InterruptedException | JsonSyntaxException e) {
+            throw fetchFailed;
+        }
+        if (response == null) {
+            throw fetchFailed;
+        }
+        if (response.success()) {
+            return response.payload(t);
+        } else {
+            throw new ApplicationException(response.message());
+        }
+    }
+
+    private void post(String location, Object entity) throws ApplicationException {
+        ApplicationException postFailed = new ApplicationException("Failed to send data");
+
+        String auth = getAuth();
+        Response response;
+        try {
+            String fetched = APIFetcher.create()
+                    .withUri(API_URI + location)
+                    .withHeader("Authorization", auth)
+                    .withBody(JsonUtils.serialize(entity))
+                    .withPost()
+                    .fetch();
+            response = Response.fromJson(fetched);
+        } catch (IOException | InterruptedException | JsonSyntaxException e) {
+            throw postFailed;
+        }
+
+        if (response == null) {
+            throw postFailed;
+        }
+        if (!response.success()) {
+            throw new ApplicationException(response.message());
+        }
+    }
+
+
+    private String getAuth() {
+        User user = User.currentUser;
+        String credentialsString = "%s:%s".formatted(user.username(), user.password());
+        return "Basic " + new String(Base64.getEncoder().encode(credentialsString.getBytes()));
+    }
 }
