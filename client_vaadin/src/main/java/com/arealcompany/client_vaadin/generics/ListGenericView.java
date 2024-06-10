@@ -19,7 +19,8 @@ import java.util.stream.Collectors;
 
 public class ListGenericView<T> extends VerticalLayout {
 
-    //TODO: We need to remove the mongo repository and call the backend when we are changing data
+    // TODO: We need to remove the mongo repository and call the backend when we are
+    // changing data
 
     private MongoRepository<T, String> repository;
     private Grid<T> grid = new Grid<>();
@@ -27,10 +28,13 @@ public class ListGenericView<T> extends VerticalLayout {
     private String tableName;
 
     private Map<String, TextField> filterFields = new HashMap<>();
+    private List<String> displayFields;
 
-    public ListGenericView(MongoRepository<T, String> repository, Class<T> clazz, String tableName) {
+    public ListGenericView(MongoRepository<T, String> repository, Class<T> clazz, String tableName,
+            List<String> displayFields) {
         this.repository = repository;
         this.tableName = tableName;
+        this.displayFields = displayFields;
         addClassName("repositories-view");
         setSizeFull();
         configureGrid(clazz);
@@ -44,9 +48,10 @@ public class ListGenericView<T> extends VerticalLayout {
         grid.addClassNames("generic-grid");
         grid.setSizeFull();
 
-        // Dynamically set columns based on class fields
+        // Dynamically set columns based on class fields and the specified display
+        // fields
         for (Field field : clazz.getDeclaredFields()) {
-            if (!field.getName().equals("id")) {
+            if (!field.getName().equals("id") && displayFields.contains(field.getName())) {
                 Grid.Column<T> column = grid.addColumn(item -> {
                     try {
                         Field f = item.getClass().getDeclaredField(field.getName());
@@ -65,7 +70,7 @@ public class ListGenericView<T> extends VerticalLayout {
         // Add filters
         HeaderRow filterRow = grid.appendHeaderRow();
         for (Field field : clazz.getDeclaredFields()) {
-            if (!field.getName().equals("id")) {
+            if (!field.getName().equals("id") && displayFields.contains(field.getName())) {
                 TextField filterField = new TextField();
                 filterFields.put(field.getName(), filterField);
                 addFilterToColumn(filterRow, grid.getColumnByKey(field.getName()), filterField);
