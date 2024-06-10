@@ -15,12 +15,6 @@ public class GatewayApi {
         this.controller = GatewayController;
     }
 
-    @GetMapping("/{service}")
-    public String forwardRequest(@PathVariable String service,
-                                 @RequestParam Map<String,String> params){
-        return controller.forwardRequest(service,"get", "", params);
-    }
-
     @GetMapping("/{service}/get/{endpoint}")
     public String forwardRequest(@PathVariable String service,
                                  @PathVariable String endpoint,
@@ -33,7 +27,14 @@ public class GatewayApi {
                                      @PathVariable String endpoint,
                                      @RequestParam Map<String,String> params,
                                      @RequestBody String body){
-        return controller.forwardRequest(service, "update", endpoint, params);
+        return controller.forwardRequest(service, "update", endpoint, params,body);
+    }
+
+    @PostMapping("/{service}/update")
+    public String forwardRequestPost(@PathVariable String service,
+                                     @RequestParam Map<String,String> params,
+                                     @RequestBody String body){
+        return controller.forwardRequest(service, "update", "", params, body);
     }
 
     @GetMapping("/auth")

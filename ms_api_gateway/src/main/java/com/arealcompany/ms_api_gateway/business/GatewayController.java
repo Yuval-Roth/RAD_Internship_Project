@@ -30,7 +30,7 @@ public class GatewayController {
         this.discoveryClient = discoveryClient;
     }
 
-    public String forwardRequest(String service, String action, String endpoint, Map<String,String> params) {
+    public String forwardRequest(String service, String action, String endpoint, Map<String,String> params, String body) {
 
         log.debug("Forwarding request to service: {} endpoint: {} params: {}", service, endpoint, params);
 
@@ -61,10 +61,19 @@ public class GatewayController {
                 .withUri("%s/%s/%s".formatted(serviceInstance.getUri(),action,endpoint))
                 .withParams(params);
 
+        if(!body.isEmpty()){
+            fetcher.withBody(body);
+            fetcher.withPost();
+        }
+
         try {
             return fetcher.fetch();
         } catch (IOException | InterruptedException e) {
             return "Failed to reach service";
         }
+    }
+
+    public String forwardRequest(String service, String update, String endpoint, Map<String, String> params) {
+        return forwardRequest(service, update, endpoint, params, "");
     }
 }
