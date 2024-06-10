@@ -92,8 +92,8 @@ public class PopulationController {
         var fetcher = APIFetcher.create()
                 .withUri("https://get-population.p.rapidapi.com/"+location)
                 .withHeader("X-RapidAPI-Key", apiKey)
-                .withHeader("X-RapidAPI-Host", "get-population.p.rapidapi.com");
-        Arrays.stream(params).forEach(pair -> fetcher.withParam(pair.first(), pair.second()));
+                .withHeader("X-RapidAPI-Host", "get-population.p.rapidapi.com")
+                .withParams(params);
         try {
             return fetcher.fetch();
         } catch (IOException | InterruptedException e) {

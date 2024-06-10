@@ -28,8 +28,8 @@ public class NewsProxyController {
         }
 
         var fetcher = APIFetcher.create()
-                .withUri(ms_news.getUri() + "/top-headlines");
-        params.forEach(fetcher::withParam);
+                .withUri(ms_news.getUri() + "/top-headlines")
+                .withParams(params);
         try {
             return fetcher.fetch();
         } catch (IOException | InterruptedException e) {

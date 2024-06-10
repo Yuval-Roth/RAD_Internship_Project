@@ -58,8 +58,8 @@ public class GatewayController {
         log.trace("Forwarding to host: {}", serviceInstance.getHost());
 
         APIFetcher fetcher = APIFetcher.create()
-                .withUri("%s/%s/%s".formatted(serviceInstance.getUri(),action,endpoint));
-        params.forEach(fetcher::withParam);
+                .withUri("%s/%s/%s".formatted(serviceInstance.getUri(),action,endpoint))
+                .withParams(params);
 
         try {
             return fetcher.fetch();
