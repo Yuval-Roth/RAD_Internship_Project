@@ -6,6 +6,7 @@ import com.arealcompany.ms_nba.business.dtos.Player;
 import com.arealcompany.ms_nba.business.dtos.Team;
 import com.arealcompany.ms_nba.repository.PlayersRepository;
 import com.arealcompany.ms_nba.repository.TeamsRepository;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +51,28 @@ public class NbaController {
         log.debug("Finding players from DB with limit: {}", limit);
         List<Player> players = limit < 0 ? playersRepo.findAll() : playersRepo.findAllLimit(limit);
         return Response.get(players);
+    }
+
+    public String updateTeam(String json) {
+        Team team;
+        try{
+            team = JsonUtils.deserialize(json, Team.class);
+        } catch(JsonSyntaxException e){
+            return Response.get("Invalid json format for team");
+        }
+        teamsRepo.save(team);
+        return Response.get(true);
+    }
+
+    public String updatePlayer(String json) {
+        Player player;
+        try{
+            player = JsonUtils.deserialize(json, Player.class);
+        } catch(JsonSyntaxException e){
+            return Response.get("Invalid json format for player");
+        }
+        playersRepo.save(player);
+        return Response.get(true);
     }
 
     @EventListener
@@ -99,5 +122,4 @@ public class NbaController {
             return Response.get("Failed to fetch data from API");
         }
     }
-
 }

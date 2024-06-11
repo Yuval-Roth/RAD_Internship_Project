@@ -10,7 +10,4 @@ public interface PopulationRepository extends MongoRepository<PopulationStat, St
 
     @Aggregation("{ $match: { country: ?0 } }")
     PopulationStat findByCountry(String country);
-
-    @Aggregation("{$match :  {country: global } }")
-    PopulationStat findGlobal();
 }

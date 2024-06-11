@@ -1,10 +1,7 @@
 package com.arealcompany.ms_population.api;
 
 import com.arealcompany.ms_population.business.PopulationController;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class PopulationApi {
@@ -15,13 +12,13 @@ public class PopulationApi {
         this.controller = populationController;
     }
 
-    @GetMapping("/")
-    public String getGlobal(@RequestParam(value = "limit", defaultValue = "-1") Integer limit) {
-        return controller.getGlobal();
-    }
-
-    @GetMapping(value = "/{country}")
+    @GetMapping(value = "/get/{country}")
     public String getCountry(@PathVariable String country){
         return controller.getCountry(country);
+    }
+
+    @PostMapping("/update")
+    public String updateCountry(@RequestBody String body) {
+        return controller.updateCountry(body);
     }
 }

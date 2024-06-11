@@ -30,7 +30,7 @@ public class GatewayController {
         this.discoveryClient = discoveryClient;
     }
 
-    public String forwardRequest(String service, String endpoint, Map<String,String> params) {
+    public String forwardRequest(String service, String action, String endpoint, Map<String,String> params, String body) {
 
         log.debug("Forwarding request to service: {} endpoint: {} params: {}", service, endpoint, params);
 
@@ -58,8 +58,13 @@ public class GatewayController {
         log.trace("Forwarding to host: {}", serviceInstance.getHost());
 
         APIFetcher fetcher = APIFetcher.create()
-                .withUri(serviceInstance.getUri()+"/"+ endpoint)
+                .withUri("%s/%s/%s".formatted(serviceInstance.getUri(),action,endpoint))
                 .withParams(params);
+
+        if(!body.isEmpty()){
+            fetcher.withBody(body);
+            fetcher.withPost();
+        }
 
         try {
             return fetcher.fetch();
@@ -68,7 +73,7 @@ public class GatewayController {
         }
     }
 
-    public String update(String service, String endpoint, String body) {
-        return "";
+    public String forwardRequest(String service, String update, String endpoint, Map<String, String> params) {
+        return forwardRequest(service, update, endpoint, params, "");
     }
 }
