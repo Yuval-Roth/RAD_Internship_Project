@@ -23,7 +23,7 @@ public class ListGenericView<T> extends VerticalLayout {
 
     private final AppController appController;
     private final Class<T> clazz;
-    private Grid<T> grid = new Grid<>();
+    private final Grid<T> grid = new Grid<>();
     private GenericForm<T> form;
     private String tableName;
     private List<String> displayFields;
@@ -103,9 +103,12 @@ public class ListGenericView<T> extends VerticalLayout {
         }
     }
 
+    //TODO: this is extremely wasteful, we can filter the list without
+    // fetching all the data all the time.
+    // You can see how it's done in the views classes
     private void updateList() {
         try {
-            List<T> items = appController.fetchItemsByTableName(tableName, clazz);
+            List<T> items = appController.fetchByEndpoint(tableName, clazz);
             List<T> filteredData = items.stream()
                     .filter(entity -> filterFields.entrySet().stream().allMatch(entry -> {
                         String fieldName = entry.getKey();
