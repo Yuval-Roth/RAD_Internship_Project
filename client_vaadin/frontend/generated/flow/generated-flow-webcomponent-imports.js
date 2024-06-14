@@ -39,20 +39,20 @@ import '@vaadin/vaadin-lumo-styles/vaadin-iconset.js';
 
 const loadOnDemand = (key) => {
   const pending = [];
-  if (key === '1395a46ba81f89777b7a0c3056615771b0d187c04e32dd95f67170a7eba68de2') {
-    pending.push(import('./chunks/chunk-1fce5f239c3dcbbdb8b2bfb3f7652112b6811b08623fa7cbae4d470923bedf5f.js'));
-  }
   if (key === '33c83196bbe5f58b27ba781720cff1711e8dd3aa26b672655072d3399eb71e84') {
-    pending.push(import('./chunks/chunk-c83a40f58e3ffa964b3d784233a1c77927d102fb34d18d3694d47e39cc6e929a.js'));
-  }
-  if (key === '7c680a885d32439087097f112f207dbe7071b486920d8d2d2c76fd52a2874d26') {
-    pending.push(import('./chunks/chunk-8f33b3beade92a8460be428fdb88dc280dad353da2db0dc6d2200c28ba044e9f.js'));
-  }
-  if (key === '5720fb0c63a55852ccd11b98121c42c89cc0a6acc12fd204d4879cde9b9ebc75') {
     pending.push(import('./chunks/chunk-c83a40f58e3ffa964b3d784233a1c77927d102fb34d18d3694d47e39cc6e929a.js'));
   }
   if (key === 'cc8b0f70368dfbfc2bc9995db38d87adb76347bc186406ea9cd88bc21944fe40') {
     pending.push(import('./chunks/chunk-1fce5f239c3dcbbdb8b2bfb3f7652112b6811b08623fa7cbae4d470923bedf5f.js'));
+  }
+  if (key === '5720fb0c63a55852ccd11b98121c42c89cc0a6acc12fd204d4879cde9b9ebc75') {
+    pending.push(import('./chunks/chunk-c83a40f58e3ffa964b3d784233a1c77927d102fb34d18d3694d47e39cc6e929a.js'));
+  }
+  if (key === '1395a46ba81f89777b7a0c3056615771b0d187c04e32dd95f67170a7eba68de2') {
+    pending.push(import('./chunks/chunk-1fce5f239c3dcbbdb8b2bfb3f7652112b6811b08623fa7cbae4d470923bedf5f.js'));
+  }
+  if (key === '7c680a885d32439087097f112f207dbe7071b486920d8d2d2c76fd52a2874d26') {
+    pending.push(import('./chunks/chunk-8f33b3beade92a8460be428fdb88dc280dad353da2db0dc6d2200c28ba044e9f.js'));
   }
   return Promise.all(pending);
 }

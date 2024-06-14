@@ -82,7 +82,7 @@ public class NbaController {
         if(args.length > 0 && args[0].equalsIgnoreCase("-fetch")) {
             fetchData();
         }
-        log.debug("\nNBA teams data ready to be queried via the REST API on port '{}'.",PORT);
+        log.debug("NBA teams data ready to be queried via the REST API on port '{}'.",PORT);
     }
 
     private void fetchData(){
