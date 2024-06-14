@@ -16,6 +16,7 @@
 	<properties>
 		<java.version>22</java.version>
 		<vaadin.version>24.3.12</vaadin.version>
+		<vaadin.productionMode>true</vaadin.productionMode>
 	</properties>
 	<dependencies>
 		<dependency>

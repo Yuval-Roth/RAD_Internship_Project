@@ -1,16 +1,32 @@
+#!/bin/bash
+
 # Define the destination directory (use forward slashes for Git Bash compatibility)
 DESTINATION_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"/compiled_jars
 SUFFIX_PATTERN="-[0-9]*.[0-9]*.[0-9]*-SNAPSHOT"
+
+# List of directories to skip
+SKIP_DIRS=("compiled_jars/" "ms_common/" "elasticsearch/" "kibana/" "logstash/")
+
+# Function to check if a directory is in the skip list
+should_skip() {
+    local dir=$1
+    for skip in "${SKIP_DIRS[@]}"; do
+        if [[ "$dir" == "$skip" ]]; then
+            return 0  # True, should skip
+        fi
+    done
+    return 1  # False, should not skip
+}
 
 # Ensure the destination directory exists
 mkdir -p "$DESTINATION_DIR"
 
 # Run mvn package
-mvn clean package
+mvn clean package -DskipTests -Pproduction
 
 # Traverse each subdirectory and copy jar
 for dir in */ ; do
-    if [ "$dir" != "compiled_jars/" ] && [ "$dir" != "ms_common/" ] && [ -d "$dir" ]; then
+    if [ -d "$dir" ] && ! should_skip "$dir"; then
         echo "Entering directory: $dir"
         cd "$dir" || exit
         
