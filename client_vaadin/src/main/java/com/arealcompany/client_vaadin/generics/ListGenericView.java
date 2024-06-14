@@ -38,29 +38,31 @@ public class ListGenericView<T> extends VerticalLayout {
         this.tableName = tableName;
         this.displayFields = displayFields;
         addClassName("repositories-view");
-        setSizeFull();
+//        setSizeFull();
         configureGrid();
         configureForm();
-        add(createTitleLayout(), getContent());
+        add(getContent());
         closeEditor();
         updateList(); // Initially populate the grid
+        tableName = clazz.getSimpleName();
+        showAllList();
     }
 
     private void configureGrid() {
         grid.addClassNames("generic-grid");
-        grid.setSizeFull();
+//        grid.setSizeFull();
 
         // Dynamically set columns based on class fields and the specified display
         // fields
         for (Field field : clazz.getDeclaredFields()) {
-            if (!field.getName().equals("id") && displayFields.contains(field.getName())) {
+            if (displayFields.contains(field.getName())) {
                 Grid.Column<T> column = grid.addColumn(item -> {
                     try {
                         Field f = item.getClass().getDeclaredField(field.getName());
                         f.setAccessible(true);
                         return f.get(item);
-                    } catch (Exception e) {
-                        return null;
+                    } catch (NoSuchFieldException | IllegalAccessException e) {
+                        throw new RuntimeException(e);
                     }
                 }).setHeader(field.getName());
                 column.setKey(field.getName());
@@ -72,7 +74,7 @@ public class ListGenericView<T> extends VerticalLayout {
         // Add filters
         HeaderRow filterRow = grid.appendHeaderRow();
         for (Field field : clazz.getDeclaredFields()) {
-            if (!field.getName().equals("id") && displayFields.contains(field.getName())) {
+            if (displayFields.contains(field.getName())) {
                 TextField filterField = new TextField();
                 filterFields.put(field.getName(), filterField);
                 addFilterToColumn(filterRow, grid.getColumnByKey(field.getName()), filterField);
@@ -133,18 +135,7 @@ public class ListGenericView<T> extends VerticalLayout {
         }
     }
 
-    private HorizontalLayout createTitleLayout() {
-        Button title1 = new Button(tableName, event -> showAllList());
-        title1.addClassNames(LumoUtility.FontSize.MEDIUM, LumoUtility.Margin.MEDIUM);
-        title1.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
-
-        HorizontalLayout titlesLayout = new HorizontalLayout(title1);
-        titlesLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-
-        return titlesLayout;
-    }
-
-    private void showAllList() {
+    public void showAllList() {
         filterFields.values().forEach(TextField::clear);
         updateList();
     }
@@ -186,7 +177,7 @@ public class ListGenericView<T> extends VerticalLayout {
     }
 
     private void closeEditor() {
-        form.setEntity(null);
+//        form.setEntity(null);
         form.setVisible(false);
         removeClassName("editing");
     }

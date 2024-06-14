@@ -1,8 +1,15 @@
 package com.arealcompany.client_vaadin.Business.dtos;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import java.beans.JavaBean;
 import java.util.Map;
 import java.util.Objects;
 
+@JavaBean
 public final class Player {
 
     private final Integer id;
@@ -64,16 +71,6 @@ public final class Player {
 
     public String leagues() {
         return leagues.keySet().toString();
-    }
-
-    public boolean filter(String filter) {
-        return id.toString().matches(filter)
-                || firstname.matches(filter)
-                || lastname.matches(filter)
-                || affiliation.matches(filter)
-                || height().matches(filter)
-                || birth().matches(filter);
-
     }
 
     @Override

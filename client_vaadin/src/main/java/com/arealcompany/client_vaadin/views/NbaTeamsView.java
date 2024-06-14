@@ -19,12 +19,8 @@ import java.util.Map;
 @Route("nba/teams")
 public class NbaTeamsView extends BaseLayout {
 
-    private final AppController appController;
-
     public NbaTeamsView(AppController appController) {
         super(appController);
-        this.appController = appController;
-
         H2 h1 = new H2("NBA Teams");
         h1.getStyle().setAlignSelf(Style.AlignSelf.CENTER);
         content.add(h1);
@@ -44,7 +40,6 @@ public class NbaTeamsView extends BaseLayout {
             grid.addColumn(Team::city).setHeader("City").setAutoWidth(true).setFlexGrow(0).setSortable(true);
             grid.addColumn(Team::allStar).setHeader("All Star").setAutoWidth(true).setFlexGrow(0).setSortable(true);
             grid.addColumn(Team::nbaFranchise).setHeader("NBA Franchise").setSortable(true);
-
 
             GridListDataView<Team> dataView = grid.setItems(nbaTeams);
             grid.setWidth("100%");
@@ -92,6 +87,6 @@ public class NbaTeamsView extends BaseLayout {
             return (id == null || team.id().toString().toLowerCase().contains(id.toLowerCase())) &&
                     (name == null || team.name().toLowerCase().contains(name.toLowerCase())) &&
                     (nickname == null || team.nickname().toLowerCase().contains(nickname.toLowerCase()));
-}
+        }
     }
 }
