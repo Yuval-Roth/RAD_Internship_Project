@@ -1,6 +1,7 @@
 package com.arealcompany.client_vaadin.views;
 
 import com.arealcompany.client_vaadin.Business.AppController;
+import com.arealcompany.client_vaadin.Business.Endpoints;
 import com.arealcompany.client_vaadin.Business.dtos.Article;
 import com.arealcompany.client_vaadin.Business.dtos.User;
 import com.arealcompany.client_vaadin.exceptions.ApplicationException;
@@ -41,7 +42,7 @@ public class NewsView extends BaseLayout {
 
         try{
 
-            List<Article> articles = appController.getArticles();
+            List<Article> articles = appController.fetchByEndpoint(Endpoints.GET_NEWS);
 
             VirtualList<Article> virtualList = new VirtualList<>();
             virtualList.setItems(articles);

@@ -1,6 +1,7 @@
 package com.arealcompany.client_vaadin.views;
 
 import com.arealcompany.client_vaadin.Business.AppController;
+import com.arealcompany.client_vaadin.Business.Endpoints;
 import com.arealcompany.client_vaadin.Business.dtos.Player;
 import com.arealcompany.client_vaadin.Business.dtos.User;
 import com.arealcompany.client_vaadin.exceptions.ApplicationException;
@@ -41,7 +42,7 @@ public class NbaPlayersView extends BaseLayout {
 
         try{
 
-            List<Player> nbaPlayers = appController.getNbaPlayers();
+            List<Player> nbaPlayers = appController.fetchByEndpoint(Endpoints.GET_PLAYERS);
             Grid<Player> grid = new Grid<>(Player.class,false);
             Grid.Column<Player> playerC = grid.addColumn(Player::id).setHeader("ID").setAutoWidth(true).setFlexGrow(0).setSortable(true);
             Grid.Column<Player> firstNameC = grid.addColumn(Player::firstname).setHeader("First Name").setAutoWidth(true).setFlexGrow(0).setSortable(true);

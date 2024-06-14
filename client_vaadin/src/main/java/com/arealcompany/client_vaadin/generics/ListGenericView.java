@@ -1,5 +1,7 @@
 package com.arealcompany.client_vaadin.generics;
 
+import com.arealcompany.client_vaadin.Business.AppController;
+import com.arealcompany.client_vaadin.exceptions.ApplicationException;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
@@ -9,7 +11,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -19,32 +21,30 @@ import java.util.stream.Collectors;
 
 public class ListGenericView<T> extends VerticalLayout {
 
-    // TODO: We need to remove the mongo repository and call the backend when we are
-    // changing data
-
-    private MongoRepository<T, String> repository;
-    private Grid<T> grid = new Grid<>();
+    private final AppController appController;
+    private final Class<T> clazz;
+    private final Grid<T> grid = new Grid<>();
     private GenericForm<T> form;
     private String tableName;
-
-    private Map<String, TextField> filterFields = new HashMap<>();
     private List<String> displayFields;
+    private Map<String, TextField> filterFields = new HashMap<>();
 
-    public ListGenericView(MongoRepository<T, String> repository, Class<T> clazz, String tableName,
-            List<String> displayFields) {
-        this.repository = repository;
+    @Autowired
+    public ListGenericView(AppController appController, Class<T> clazz, String tableName, List<String> displayFields) {
+        this.appController = appController;
+        this.clazz = clazz;
         this.tableName = tableName;
         this.displayFields = displayFields;
         addClassName("repositories-view");
         setSizeFull();
-        configureGrid(clazz);
-        configureForm(clazz);
+        configureGrid();
+        configureForm();
         add(createTitleLayout(), getContent());
         closeEditor();
-        // updateList(); // Initially populate the grid
+        updateList(); // Initially populate the grid
     }
 
-    private void configureGrid(Class<T> clazz) {
+    private void configureGrid() {
         grid.addClassNames("generic-grid");
         grid.setSizeFull();
 
@@ -103,23 +103,32 @@ public class ListGenericView<T> extends VerticalLayout {
         }
     }
 
+    //TODO: this is extremely wasteful, we can filter the list without
+    // fetching all the data all the time.
+    // You can see how it's done in the views classes
     private void updateList() {
-        List<T> filteredData = repository.findAll().stream()
-                .filter(entity -> filterFields.entrySet().stream().allMatch(entry -> {
-                    String fieldName = entry.getKey();
-                    String filterValue = entry.getValue().getValue();
-                    try {
-                        Field field = entity.getClass().getDeclaredField(fieldName);
-                        field.setAccessible(true);
-                        Object value = field.get(entity);
-                        return filterValue == null || filterValue.isEmpty() ||
-                                (value != null && value.toString().toLowerCase().contains(filterValue.toLowerCase()));
-                    } catch (Exception e) {
-                        return true;
-                    }
-                }))
-                .collect(Collectors.toList());
-        grid.setItems(filteredData);
+        try {
+            List<T> items = appController.fetchByEndpoint(tableName, clazz);
+            List<T> filteredData = items.stream()
+                    .filter(entity -> filterFields.entrySet().stream().allMatch(entry -> {
+                        String fieldName = entry.getKey();
+                        String filterValue = entry.getValue().getValue();
+                        try {
+                            Field field = entity.getClass().getDeclaredField(fieldName);
+                            field.setAccessible(true);
+                            Object value = field.get(entity);
+                            return filterValue == null || filterValue.isEmpty() ||
+                                    (value != null
+                                            && value.toString().toLowerCase().contains(filterValue.toLowerCase()));
+                        } catch (Exception e) {
+                            return true;
+                        }
+                    }))
+                    .collect(Collectors.toList());
+            grid.setItems(filteredData);
+        } catch (ApplicationException e) {
+            // Handle exception (e.g., show a notification)
+        }
     }
 
     private HorizontalLayout createTitleLayout() {
@@ -135,7 +144,7 @@ public class ListGenericView<T> extends VerticalLayout {
 
     private void showAllList() {
         filterFields.values().forEach(TextField::clear);
-        grid.setItems(repository.findAll());
+        updateList();
     }
 
     private HorizontalLayout getContent() {
@@ -146,7 +155,7 @@ public class ListGenericView<T> extends VerticalLayout {
         return content;
     }
 
-    private void configureForm(Class<T> clazz) {
+    private void configureForm() {
         form = new GenericForm<>(clazz);
         form.setWidth("25em");
         form.addSaveListener(event -> saveEntity(event));
@@ -155,15 +164,23 @@ public class ListGenericView<T> extends VerticalLayout {
     }
 
     private void saveEntity(GenericForm.SaveEvent<T> event) {
-        repository.save(event.getEntity());
-        updateList();
-        closeEditor();
+        try {
+            appController.updateEntity(tableName, event.getEntity());
+            updateList();
+            closeEditor();
+        } catch (ApplicationException e) {
+            // Handle exception (e.g., show a notification)
+        }
     }
 
     private void deleteEntity(GenericForm.DeleteEvent<T> event) {
-        repository.delete(event.getEntity());
-        updateList();
-        closeEditor();
+        try {
+            appController.deleteEntity(tableName, event.getEntity());
+            updateList();
+            closeEditor();
+        } catch (ApplicationException e) {
+            // Handle exception (e.g., show a notification)
+        }
     }
 
     private void closeEditor() {
