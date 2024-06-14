@@ -16,7 +16,7 @@ public class NewsProxyApi {
         this.controller = newsProxyController;
     }
 
-    @GetMapping("/top-headlines")
+    @GetMapping("/get/top-headlines")
     String getTopHeadlines(@RequestParam Map<String,String> params){
         return controller.getTopHeadlines(params);
     }

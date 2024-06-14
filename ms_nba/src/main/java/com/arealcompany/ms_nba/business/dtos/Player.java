@@ -1,11 +1,13 @@
 package com.arealcompany.ms_nba.business.dtos;
 
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.Map;
 
 @Document(value = "players")
 public record Player(
+        @MongoId
         Integer id,
         String firstname,
         String lastname,

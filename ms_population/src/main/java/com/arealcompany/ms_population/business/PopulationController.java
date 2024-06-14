@@ -47,12 +47,6 @@ public class PopulationController {
         }
     }
 
-    public String getGlobal(){
-        log.debug("Finding global population data");
-        PopulationStat global = repo.findGlobal();
-        return Response.get(global);
-    }
-
     @EventListener
     public void handleApplicationReadyEvent(ApplicationReadyEvent event) {
         String[] args = event.getArgs();
@@ -102,4 +96,14 @@ public class PopulationController {
         }
     }
 
+    public String updateCountry(String json) {
+        PopulationStat stat;
+        try{
+            stat = JsonUtils.deserialize(json, PopulationStat.class);
+        } catch(Exception e){
+            return Response.get("Invalid json format for population data");
+        }
+        repo.save(stat);
+        return Response.get(true);
+    }
 }

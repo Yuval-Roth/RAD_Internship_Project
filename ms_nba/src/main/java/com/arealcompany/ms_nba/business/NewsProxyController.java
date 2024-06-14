@@ -28,7 +28,7 @@ public class NewsProxyController {
         }
 
         var fetcher = APIFetcher.create()
-                .withUri(ms_news.getUri() + "/top-headlines")
+                .withUri(ms_news.getUri() + "/get/top-headlines")
                 .withParams(params);
         try {
             return fetcher.fetch();
