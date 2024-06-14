@@ -32,5 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 
-**/api_key.txt
 compiled_jars/*
+elasticsearch*/*
+kibana*/*
+logstash*/*
