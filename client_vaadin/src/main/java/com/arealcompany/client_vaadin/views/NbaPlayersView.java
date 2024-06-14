@@ -3,8 +3,10 @@ package com.arealcompany.client_vaadin.views;
 import com.arealcompany.client_vaadin.Business.AppController;
 import com.arealcompany.client_vaadin.Business.Endpoints;
 import com.arealcompany.client_vaadin.Business.dtos.Player;
+import com.arealcompany.client_vaadin.Business.dtos.Team;
 import com.arealcompany.client_vaadin.Business.dtos.User;
 import com.arealcompany.client_vaadin.exceptions.ApplicationException;
+import com.arealcompany.client_vaadin.generics.ListGenericView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.grid.Grid;
@@ -19,17 +21,15 @@ import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.Route;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 
 @Route("nba/players")
 public class NbaPlayersView extends BaseLayout {
 
-    private final AppController appController;
-
     public NbaPlayersView(AppController appController) {
         super(appController);
-        this.appController = appController;
 
         H2 h1 = new H2("NBA Players");
         h1.getStyle().setAlignSelf(Style.AlignSelf.CENTER);
@@ -41,7 +41,6 @@ public class NbaPlayersView extends BaseLayout {
         }
 
         try{
-
             List<Player> nbaPlayers = appController.fetchByEndpoint(Endpoints.GET_PLAYERS);
             Grid<Player> grid = new Grid<>(Player.class,false);
             Grid.Column<Player> playerC = grid.addColumn(Player::id).setHeader("ID").setAutoWidth(true).setFlexGrow(0).setSortable(true);
@@ -61,7 +60,6 @@ public class NbaPlayersView extends BaseLayout {
             hr.getCell(playerC).setComponent(createFilterHeader(playerFilter::setId));
             hr.getCell(firstNameC).setComponent(createFilterHeader(playerFilter::setFirstName));
             hr.getCell(lastNameC).setComponent(createFilterHeader(playerFilter::setLastName));
-
 
             content.add(grid);
         } catch (ApplicationException e) {

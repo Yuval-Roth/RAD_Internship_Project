@@ -1,9 +1,7 @@
 package com.arealcompany.client_vaadin.generics;
 
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEvent;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.HasValue;
+import ch.qos.logback.core.spi.ContextAware;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -34,7 +32,7 @@ public class GenericForm<T> extends FormLayout {
 
     public GenericForm(Class<T> entityClass) {
         this.entityClass = entityClass;
-        this.binder = new BeanValidationBinder<>(entityClass);
+        this.binder = new Binder<>(entityClass);  //new Binder<>(entityClass);
         addClassName("generic-form");
         createFields();
         add(createButtonsLayout());
@@ -55,6 +53,7 @@ public class GenericForm<T> extends FormLayout {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private Component createFieldComponent(Field field) {
         try {
             field.setAccessible(true);
@@ -64,17 +63,27 @@ public class GenericForm<T> extends FormLayout {
             if (fieldType == Integer.class || fieldType == int.class) {
                 component = new IntegerField(field.getName());
                 binder.bind((HasValue<?, Integer>) component, field.getName());
-            } else if (fieldType == String.class) {
-                component = new TextField(field.getName());
-                binder.bind((HasValue<?, String>) component, field.getName());
-            } else if (fieldType == Double.class || fieldType == double.class ||
+            }
+
+            else if (fieldType == String.class) {
+                TextField comp = new TextField(field.getName());
+                String name = field.getName();
+                binder.bind(comp, name);
+                component = comp;
+            }
+
+            else if (fieldType == Double.class || fieldType == double.class ||
                     fieldType == Float.class || fieldType == float.class) {
                 component = new TextField(field.getName());
                 binder.bind((HasValue<?, Double>) component, field.getName());
-            } else if (fieldType == Boolean.class || fieldType == boolean.class) {
+            }
+
+            else if (fieldType == Boolean.class || fieldType == boolean.class) {
                 component = new Checkbox(field.getName());
                 binder.bind((HasValue<?, Boolean>) component, field.getName());
-            } else if (fieldType == Date.class) {
+            }
+
+            else if (fieldType == Date.class) {
                 component = new DatePicker(field.getName());
                 binder.bind((HasValue<?, LocalDate>) component, field.getName());
             }

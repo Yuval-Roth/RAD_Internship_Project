@@ -36,4 +36,5 @@ compiled_jars/*
 elasticsearch*/*
 kibana*/*
 logstash*/*
-logs/*
+<<<<<<< HEAD
+**/logs/*
