@@ -3,6 +3,7 @@ package com.arealcompany.client_vaadin.Business;
 import com.arealcompany.client_vaadin.Business.dtos.*;
 import com.arealcompany.client_vaadin.exceptions.ApplicationException;
 import com.arealcompany.ms_common.utils.APIFetcher;
+import com.arealcompany.ms_common.utils.JsonUtils;
 import com.arealcompany.ms_common.utils.Response;
 import com.google.gson.JsonSyntaxException;
 import org.springframework.stereotype.Service;
@@ -21,32 +22,24 @@ public class AppController {
         return "Welcome to my app!";
     }
 
-    public List<Player> getNbaPlayers() throws ApplicationException {
-        return fetch("nba/get/players",Player.class);
+    public <T> List<T> fetchByEndpoint(Endpoints endpoint) throws ApplicationException {
+        return fetch(endpoint.location(), endpoint.clazz());
     }
 
-    public List<Team> getNbaTeams() throws ApplicationException {
-        return fetch("nba/get/teams",Team.class);
-    }
-
-    public List<Article> getArticles() throws ApplicationException {
-        return fetch("news/get/top-headlines", Article.class);
-    }
-
-    public List<PopulationStat> getPopulationStats() throws ApplicationException {
-        return fetch("population/get/all",PopulationStat.class);
+    public void postByEndpoint(Endpoints endpoint, Object entity) throws ApplicationException {
+        post(endpoint.location(), entity);
     }
 
     public boolean login(String username, String password) {
         User.currentUser = new User(username, password);
         List<Boolean> fetched;
         try {
-            fetched = fetch("auth",Boolean.class);
+            fetched = fetchByEndpoint(Endpoints.LOGIN);
         } catch (ApplicationException e) {
             return false;
         }
-        Boolean success = fetched.getFirst();
-        if(success) {
+        Boolean success = fetched.get(0);
+        if (success) {
             User.isUserLoggedIn = true;
         } else {
             User.currentUser = null;
@@ -57,9 +50,7 @@ public class AppController {
     private <T> List<T> fetch(String location, Type t) throws ApplicationException {
         ApplicationException fetchFailed = new ApplicationException("Failed to fetch data");
 
-        User user = User.currentUser;
-        String credentialsString = "%s:%s".formatted(user.username(), user.password());
-        String auth = "Basic " + new String(Base64.getEncoder().encode(credentialsString.getBytes()));
+        String auth = getAuth();
         Response response;
         try {
             String fetched = APIFetcher.create()
@@ -70,19 +61,45 @@ public class AppController {
         } catch (IOException | InterruptedException | JsonSyntaxException e) {
             throw fetchFailed;
         }
-        if(response == null){
+        if (response == null) {
             throw fetchFailed;
         }
-        if(response.success()) {
+        if (response.success()) {
             return response.payload(t);
         } else {
             throw new ApplicationException(response.message());
         }
     }
 
-    //a method for updating an object and sending it to the backend
-    public <T> void updateObject(T object, String location) throws ApplicationException {
+    private void post(String location, Object entity) throws ApplicationException {
+        ApplicationException postFailed = new ApplicationException("Failed to send data");
 
+        String auth = getAuth();
+        Response response;
+        try {
+            String fetched = APIFetcher.create()
+                    .withUri(API_URI + location)
+                    .withHeader("Authorization", auth)
+                    .withBody(JsonUtils.serialize(entity))
+                    .withPost()
+                    .fetch();
+            response = Response.fromJson(fetched);
+        } catch (IOException | InterruptedException | JsonSyntaxException e) {
+            throw postFailed;
+        }
+
+        if (response == null) {
+            throw postFailed;
+        }
+        if (!response.success()) {
+            throw new ApplicationException(response.message());
+        }
     }
 
+
+    private String getAuth() {
+        User user = User.currentUser;
+        String credentialsString = "%s:%s".formatted(user.username(), user.password());
+        return "Basic " + new String(Base64.getEncoder().encode(credentialsString.getBytes()));
+    }
 }
