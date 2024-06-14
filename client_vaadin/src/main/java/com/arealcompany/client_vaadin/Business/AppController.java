@@ -77,10 +77,11 @@ public class AppController {
         String auth = getAuth();
         Response response;
         try {
+            String body = JsonUtils.serialize(entity);
             String fetched = APIFetcher.create()
                     .withUri(API_URI + location)
                     .withHeader("Authorization", auth)
-                    .withBody(JsonUtils.serialize(entity))
+                    .withBody(body)
                     .withPost()
                     .fetch();
             response = Response.fromJson(fetched);

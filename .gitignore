@@ -35,3 +35,4 @@ build/
 compiled_jars/*
 elk/*
 **/logs/*
+**/generated/*

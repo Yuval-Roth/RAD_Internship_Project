@@ -40,31 +40,40 @@ public class NbaPlayersView extends BaseLayout {
             return;
         }
 
-        try{
-            List<Player> nbaPlayers = appController.fetchByEndpoint(Endpoints.GET_PLAYERS);
-            Grid<Player> grid = new Grid<>(Player.class,false);
-            Grid.Column<Player> playerC = grid.addColumn(Player::id).setHeader("ID").setAutoWidth(true).setFlexGrow(0).setSortable(true);
-            Grid.Column<Player> firstNameC = grid.addColumn(Player::firstname).setHeader("First Name").setAutoWidth(true).setFlexGrow(0).setSortable(true);
-            Grid.Column<Player> lastNameC = grid.addColumn(Player::lastname).setHeader("Last Name").setAutoWidth(true).setFlexGrow(0).setSortable(true);
-            grid.addColumn(Player::height).setHeader("Height").setAutoWidth(true).setFlexGrow(0).setSortable(true);
-            grid.addColumn(Player::birth).setHeader("Birth").setAutoWidth(true).setFlexGrow(0).setSortable(true);
-            grid.addColumn(Player::affiliation).setHeader("Affiliation").setSortable(true);
+//        try{
+//            List<Player> nbaPlayers = appController.fetchByEndpoint(Endpoints.GET_PLAYERS);
+//            Grid<Player> grid = new Grid<>(Player.class,false);
+//            Grid.Column<Player> playerC = grid.addColumn(Player::id).setHeader("ID").setAutoWidth(true).setFlexGrow(0).setSortable(true);
+//            Grid.Column<Player> firstNameC = grid.addColumn(Player::firstname).setHeader("First Name").setAutoWidth(true).setFlexGrow(0).setSortable(true);
+//            Grid.Column<Player> lastNameC = grid.addColumn(Player::lastname).setHeader("Last Name").setAutoWidth(true).setFlexGrow(0).setSortable(true);
+//            grid.addColumn(Player::height).setHeader("Height").setAutoWidth(true).setFlexGrow(0).setSortable(true);
+//            grid.addColumn(Player::birth).setHeader("Birth").setAutoWidth(true).setFlexGrow(0).setSortable(true);
+//            grid.addColumn(Player::affiliation).setHeader("Affiliation").setSortable(true);
+//
+//            GridListDataView<Player> dataView = grid.setItems(nbaPlayers);
+//            grid.setWidth("100%");
+//            grid.setHeight(500, Unit.PIXELS);
+//
+//            PlayerFilter playerFilter = new PlayerFilter(dataView);
+//
+//            HeaderRow hr = grid.appendHeaderRow();
+//            hr.getCell(playerC).setComponent(createFilterHeader(playerFilter::setId));
+//            hr.getCell(firstNameC).setComponent(createFilterHeader(playerFilter::setFirstName));
+//            hr.getCell(lastNameC).setComponent(createFilterHeader(playerFilter::setLastName));
+//
+//            content.add(grid);
+//        } catch (ApplicationException e) {
+//            openErrorDialog(e.getMessage());
+//        }
 
-            GridListDataView<Player> dataView = grid.setItems(nbaPlayers);
-            grid.setWidth("100%");
-            grid.setHeight(500, Unit.PIXELS);
+        ListGenericView<Player> listGenericView = new ListGenericView<>(appController,
+                Player.class,
+                Map.of("fetch", Endpoints.GET_PLAYERS,
+                        "update" , Endpoints.UPDATE_PLAYER,
+                        "delete", Endpoints.DELETE_PLAYER),
+                List.of("id", "firstname", "lastname"));
 
-            PlayerFilter playerFilter = new PlayerFilter(dataView);
-
-            HeaderRow hr = grid.appendHeaderRow();
-            hr.getCell(playerC).setComponent(createFilterHeader(playerFilter::setId));
-            hr.getCell(firstNameC).setComponent(createFilterHeader(playerFilter::setFirstName));
-            hr.getCell(lastNameC).setComponent(createFilterHeader(playerFilter::setLastName));
-
-            content.add(grid);
-        } catch (ApplicationException e) {
-            openErrorDialog(e.getMessage());
-        }
+        content.add(listGenericView);
     }
 
     private static class PlayerFilter {

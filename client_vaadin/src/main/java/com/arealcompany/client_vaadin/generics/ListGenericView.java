@@ -151,8 +151,8 @@ public class ListGenericView<T> extends VerticalLayout {
     private void configureForm() {
         form = new GenericForm<>(clazz);
         form.setWidth("25em");
-        form.addSaveListener(event -> updateEntity(event));
-        form.addDeleteListener(event -> deleteEntity(event));
+        form.addSaveListener(this::updateEntity);
+        form.addDeleteListener(this::deleteEntity);
         form.addCloseListener(e -> closeEditor());
     }
 
