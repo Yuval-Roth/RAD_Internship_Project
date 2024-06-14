@@ -31,15 +31,11 @@ public class POJOBinder<T> {
         }
     }
 
-    /**
-     * Read the fields from the object and set the values to the components using {@link Objects#toString()}
-     */
     public void readObject(T object) {
         this.object = object;
         fields.forEach((fieldName, field) -> {
             try {
-                Object value = field.get(object);
-                components.get(fieldName).setValue(Objects.toString( value, ""));
+                components.get(fieldName).setValue(field.get(object));
             } catch (IllegalAccessException ignored) {}
         });
     }
