@@ -33,7 +33,5 @@ build/
 .vscode/
 
 compiled_jars/*
-elasticsearch*/*
-kibana*/*
-logstash*/*
+elk/*
 **/logs/*
