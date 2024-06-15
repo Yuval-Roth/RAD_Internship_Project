@@ -3,6 +3,7 @@ package com.arealcompany.client_vaadin.generics;
 import com.arealcompany.client_vaadin.Business.AppController;
 import com.arealcompany.client_vaadin.Business.Endpoints;
 import com.arealcompany.client_vaadin.exceptions.ApplicationException;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.HeaderRow;
@@ -25,8 +26,8 @@ public class ListGenericView<T> extends VerticalLayout {
     private final Grid<T> grid;
     private final GenericForm<T> form;
     private final List<String> displayFields;
-    private Consumer<String> errorHandler;
     private final Map<String,Function<Object,String>> fieldConverters;
+    private Consumer<String> errorHandler;
 
     public ListGenericView(AppController appController, Class<T> clazz, Map<String, Endpoints> endpoints , List<String> displayFields) {
         this.appController = appController;
@@ -39,7 +40,7 @@ public class ListGenericView<T> extends VerticalLayout {
         configureEditor();
         add(getContent());
         closeEditor();
-        updateList(); // Initially populate the grid
+        populateGrid();
     }
 
     public ListGenericView<T> setErrorHandler(Consumer<String> handler) {
@@ -79,16 +80,18 @@ public class ListGenericView<T> extends VerticalLayout {
                 }
             }).setHeader(fieldName).setKey(fieldName);
             if(iterator.hasNext()){
-                column.setAutoWidth(true).setFlexGrow(0);
+                column.setAutoWidth(true).setFlexGrow(0).setResizable(true);
             }
             column.setSortable(true);
         }
-        grid.addComponentColumn(this::createEditButton).setHeader("Actions").setFlexGrow(0);
+        grid.addComponentColumn(this::createEditButton).setHeader("Actions").setKey("actions").setFlexGrow(0);
     }
 
     private Button createEditButton(T entity) {
         Button editButton = new Button("Edit");
-        editButton.addClickListener(event -> openEditForm(entity));
+        editButton.addClickListener(event -> {
+            openEditForm(entity);
+        });
         return editButton;
     }
 
@@ -103,7 +106,7 @@ public class ListGenericView<T> extends VerticalLayout {
         }
     }
 
-    private void updateList() {
+    private void populateGrid() {
         try {
             grid.setItems(appController.fetchByEndpoint(endpoints.get("fetch")));
         } catch (ApplicationException e) {
@@ -127,25 +130,32 @@ public class ListGenericView<T> extends VerticalLayout {
 
     private void updateEntity(GenericForm.SaveEvent<T> event) {
         try {
-            appController.postByEndpoint(endpoints.get("update"), event.getEntity());
-            updateList();
-            closeEditor();
+            T entity = event.getEntity();
+            appController.postByEndpoint(endpoints.get("update"), entity);
+            refreshPage();
         } catch (ApplicationException e) {
             handleError(e.getMessage());
         }
     }
 
     private void deleteEntity(GenericForm.DeleteEvent<T> event) {
-        try {
-            appController.postByEndpoint(endpoints.get("delete"), event.getEntity());
-            updateList();
-            closeEditor();
-        } catch (ApplicationException e) {
-            handleError(e.getMessage());
-        }
+        handleError("Delete functionality not implemented");
+//        try {
+//            T entity = event.getEntity();
+//            appController.postByEndpoint(endpoints.get("delete"), entity);
+//            grid.getListDataView().removeItem(entity);
+//            closeEditor();
+//        } catch (ApplicationException e) {
+//            handleError(e.getMessage());
+//        }
+    }
+
+    private void refreshPage() {
+        UI.getCurrent().getPage().reload();
     }
 
     private void closeEditor() {
+        form.setEntity(null);
         form.setVisible(false);
     }
 

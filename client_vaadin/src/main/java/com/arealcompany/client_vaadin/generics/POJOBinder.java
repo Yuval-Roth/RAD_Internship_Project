@@ -33,6 +33,9 @@ public class POJOBinder<T> {
 
     public void readObject(T object) {
         this.object = object;
+        if(object == null){
+            return;
+        }
         fields.forEach((fieldName, field) -> {
             try {
                 components.get(fieldName).setValue(field.get(object));
