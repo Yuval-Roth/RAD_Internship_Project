@@ -25,9 +25,6 @@ public class MapBinder {
         components.forEach((key, component) -> component.setValue(map.get(key)));
     }
 
-    /**
-     * Write the values from the components to the object
-     */
     public Map<String,?> writeAndGetMap() {
         components.forEach((key, component) -> map.put(key, component.getValue()));
         return map;

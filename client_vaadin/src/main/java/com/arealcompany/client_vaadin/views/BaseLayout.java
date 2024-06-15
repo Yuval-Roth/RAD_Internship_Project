@@ -39,6 +39,7 @@ public abstract class BaseLayout extends AppLayout {
 
     public BaseLayout(AppController appController) {
         content = new VerticalLayout();
+        this.appController = appController;
         setContent(content);
 
         SideNav nav1 = new SideNav();
@@ -81,7 +82,6 @@ public abstract class BaseLayout extends AppLayout {
             logoutButton.getStyle().set("margin-left", "50px");
             addToNavbar(username, logoutButton);
         }
-        this.appController = appController;
     }
 
     protected static com.vaadin.flow.component.Component createFilterHeader(Consumer<String> filterChangeConsumer) {

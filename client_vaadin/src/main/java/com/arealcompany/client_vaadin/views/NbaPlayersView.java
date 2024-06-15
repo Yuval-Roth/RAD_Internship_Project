@@ -72,7 +72,12 @@ public class NbaPlayersView extends BaseLayout {
                         "update" , Endpoints.UPDATE_PLAYER,
                         "delete", Endpoints.DELETE_PLAYER),
                 List.of("id", "firstname", "lastname"));
-
+        listGenericView.setErrorHandler(this::openErrorDialog);
+        listGenericView.setFilter((thisEntity,otherEntity) ->
+            (thisEntity.id() == null || otherEntity.id().toString().contains(thisEntity.id().toString())) &&
+            (thisEntity.firstname() == null || otherEntity.firstname().toLowerCase().contains(thisEntity.firstname().toLowerCase())) &&
+            (thisEntity.lastname() == null || otherEntity.lastname().toLowerCase().contains(thisEntity.lastname().toLowerCase()))
+        );
         content.add(listGenericView);
     }
 

@@ -5,4 +5,7 @@ public record User(String username, String password) {
     public static User currentUser;
     public static boolean isUserLoggedIn = false;
 
+    public User() {
+        this("", "");
+    }
 }

@@ -41,6 +41,10 @@ public final class Player {
         this.leagues = leagues;
     }
 
+    public Player() {
+        this(0, "", "", Map.of(), Map.of(), Map.of(), "", Map.of());
+    }
+
     public Integer id() {
         return id;
     }
