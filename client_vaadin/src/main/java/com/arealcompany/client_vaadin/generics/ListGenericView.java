@@ -57,8 +57,9 @@ public class ListGenericView<T> extends VerticalLayout {
         return this;
     }
 
-    public ListGenericView<T> setFieldConverter(String fieldName, Function<Object,String> converter){
-        fieldConverters.put(fieldName,converter);
+    @SuppressWarnings("unchecked")
+    public <K> ListGenericView<T> setFieldConverter(String fieldName, Function<K,String> converter){
+        fieldConverters.put(fieldName,(Function<Object,String>)converter);
         return this;
     }
 
