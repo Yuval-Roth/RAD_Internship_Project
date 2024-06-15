@@ -9,4 +9,8 @@ public record PopulationStat(Long count, String readable_format, @Nullable Strin
         this.readable_format = readable_format;
         this.country = country == null ? "global" : country.toLowerCase();
     }
+
+    public PopulationStat() {
+        this(0L, "", "");
+    }
 }

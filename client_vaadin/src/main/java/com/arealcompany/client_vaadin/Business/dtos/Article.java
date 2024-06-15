@@ -10,4 +10,8 @@ public record Article(
         String image,
         String publishedAt,
         Map<String,String> source
-){}
+){
+    public Article() {
+        this("","","","","","",Map.of());
+    }
+}

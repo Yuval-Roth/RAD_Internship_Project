@@ -33,8 +33,13 @@ build/
 .vscode/
 
 compiled_jars/*
-elasticsearch*/*
-kibana*/*
-logstash*/*
-<<<<<<< HEAD
+
+elk/elasticsearch/*
+!elk/elasticsearch/config
+elk/kibana/*
+!elk/kibana/config
+elk/logstash/*
+!elk/logstash/config
+
 **/logs/*
+client_vaadin/**/generated/*

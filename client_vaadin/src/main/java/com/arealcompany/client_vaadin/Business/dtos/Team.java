@@ -35,6 +35,10 @@ public final class Team {
         this.leagues = leagues;
     }
 
+    public Team() {
+        this(0, "", "", "", "", "", false, false, Map.of());
+    }
+
     public Integer id() {
         return id;
     }

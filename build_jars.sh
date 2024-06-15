@@ -5,7 +5,7 @@ DESTINATION_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 SUFFIX_PATTERN="-[0-9]*.[0-9]*.[0-9]*-SNAPSHOT"
 
 # List of directories to skip
-SKIP_DIRS=("compiled_jars/" "ms_common/" "elasticsearch/" "kibana/" "logstash/")
+SKIP_DIRS=("compiled_jars/" "ms_common/" "elk/")
 
 # Function to check if a directory is in the skip list
 should_skip() {

@@ -10,11 +10,11 @@ public enum Endpoints {
     GET_PLAYERS("nba/get/players", Player.class),
     GET_NEWS("news/get/top-headlines", Article.class),
     GET_POPULATION("population/get/all", PopulationStat.class),
-    UPDATE_TEAM("nba/update/team", Boolean.class),
-    UPDATE_PLAYER("nba/update/player", Boolean.class),
+    UPDATE_TEAM("nba/update/teams", Boolean.class),
+    UPDATE_PLAYER("nba/update/players", Boolean.class),
     UPDATE_POPULATION("population/update", Boolean.class),
-    DELETE_TEAM("nba/delete/team", Boolean.class),
-    DELETE_PLAYER("nba/delete/player", Boolean.class),
+    DELETE_TEAM("nba/delete/teams", Boolean.class),
+    DELETE_PLAYER("nba/delete/players", Boolean.class),
     DELETE_POPULATION("population/delete", Boolean.class),
     LOGIN("auth", Boolean.class);
 

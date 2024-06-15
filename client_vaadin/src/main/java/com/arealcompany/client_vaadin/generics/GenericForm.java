@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class GenericForm<T> extends FormLayout {
 
-    private Binder<T> binder;
+    private POJOBinder<T> binder;
     private Class<T> entityClass;
     private Map<String, Component> fieldComponents = new HashMap<>();
 
@@ -32,7 +32,7 @@ public class GenericForm<T> extends FormLayout {
 
     public GenericForm(Class<T> entityClass) {
         this.entityClass = entityClass;
-        this.binder = new Binder<>(entityClass);  //new Binder<>(entityClass);
+        this.binder = new POJOBinder<>(entityClass);
         addClassName("generic-form");
         createFields();
         add(createButtonsLayout());
@@ -103,21 +103,19 @@ public class GenericForm<T> extends FormLayout {
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
         save.addClickListener(event -> validateAndSave());
-        delete.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
-        close.addClickListener(event -> fireEvent(new CloseEvent(this)));
+        delete.addClickListener(event -> fireEvent(new DeleteEvent<>(this, binder.getObject())));
+        close.addClickListener(event -> fireEvent(new CloseEvent<>(this)));
 
-        binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
         return new HorizontalLayout(save, delete, close);
     }
 
     private void validateAndSave() {
-        if (binder.isValid()) {
-            fireEvent(new SaveEvent(this, binder.getBean()));
-        }
+        fireEvent(new SaveEvent<>(this, binder.writeAndGetObject()));
+
     }
 
     public void setEntity(T entity) {
-        binder.setBean(entity);
+        binder.readObject(entity);
     }
 
     public static abstract class GenericFormEvent<T> extends ComponentEvent<GenericForm<T>> {
