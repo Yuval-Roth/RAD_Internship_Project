@@ -34,14 +34,11 @@ build/
 
 compiled_jars/*
 
-# Ignore everything in the elk directory
 elk/elasticsearch/*
-elk/kibana/*
-elk/logstash/*
-
-# Re-include specific config files
 !elk/elasticsearch/config
+elk/kibana/*
 !elk/kibana/config
+elk/logstash/*
 !elk/logstash/config
 
 **/logs/*
