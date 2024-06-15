@@ -33,6 +33,16 @@ build/
 .vscode/
 
 compiled_jars/*
-elk/*
+
+# Ignore everything in the elk directory
+elk/elasticsearch/*
+elk/kibana/*
+elk/logstash/*
+
+# Re-include specific config files
+!elk/elasticsearch/config
+!elk/kibana/config
+!elk/logstash/config
+
 **/logs/*
-**/generated/*
+client_vaadin/**/generated/*
