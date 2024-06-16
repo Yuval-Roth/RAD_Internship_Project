@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository()
-public interface TeamsRepository extends MongoRepository<Team, String> {
+public interface TeamsRepository extends MongoRepository<Team, Integer> {
 
     @Aggregation("{ $limit : ?0 }")
     List<Team> findAllLimit(int maxCount);
