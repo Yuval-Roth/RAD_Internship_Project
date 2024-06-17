@@ -13,8 +13,8 @@ import java.util.Map;
 public class APIFetcher {
 
     private String uri;
-    private final Map<String,String> headers;
-    private final Map<String,String> params;
+    private final Map<String, String> headers;
+    private final Map<String, String> params;
     private String body;
     private boolean isPost;
 
@@ -41,7 +41,7 @@ public class APIFetcher {
         // build request
         var builder = HttpRequest.newBuilder()
                 .uri(URI.create(fullUri));
-        if(isPost) {
+        if (isPost) {
             builder.POST(HttpRequest.BodyPublishers.ofString(body));
         } else {
             builder.GET();
@@ -51,14 +51,15 @@ public class APIFetcher {
 
         // send request
         HttpResponse<String> response;
-        try(HttpClient client = HttpClient.newHttpClient()) {
+        try (HttpClient client = HttpClient.newHttpClient()) {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
         }
         return response.body();
     }
 
     /**
-     * Set the body of the request. Must be used with {@link #withPost()} to have any effect
+     * Set the body of the request. Must be used with {@link #withPost()} to have
+     * any effect
      */
     public APIFetcher withBody(String body) {
         this.body = body;
@@ -66,7 +67,8 @@ public class APIFetcher {
     }
 
     /**
-     * Set the request method to POST. If {@link #withBody(String)} is not called, the body will be empty
+     * Set the request method to POST. If {@link #withBody(String)} is not called,
+     * the body will be empty
      */
     public APIFetcher withPost() {
         isPost = true;
@@ -87,7 +89,7 @@ public class APIFetcher {
     public APIFetcher withHeader(String key, String value) {
         assert !headers.containsKey(key) : "Header %s set more than once".formatted(key);
 
-        headers.put(key,value);
+        headers.put(key, value);
         return this;
     }
 
@@ -95,7 +97,7 @@ public class APIFetcher {
         assert !params.containsKey(key) : "Param %s set more than once".formatted(key);
 
         value = value.replaceAll(" ", "%20");
-        params.put(key,value);
+        params.put(key, value);
         return this;
     }
 
@@ -105,7 +107,7 @@ public class APIFetcher {
     }
 
     @SafeVarargs
-    public final APIFetcher withParams(Pair<String, String>... params){
+    public final APIFetcher withParams(Pair<String, String>... params) {
         Arrays.stream(params).forEach(p -> this.withParam(p.first(), p.second()));
         return this;
     }
