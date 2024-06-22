@@ -1,0 +1,30 @@
+input {
+  file {
+    path => ["{root}/logs/ms_nba/application.log"]
+    start_position => "beginning"
+  }
+  file {
+    path => ["{root}/logs/ms_news/application.log"]
+    start_position => "beginning"
+  }
+  file {
+    path => ["{root}/logs/ms_population/application.log"]
+    start_position => "beginning"
+  }
+  file {
+    path => ["{root}/logs/client_vaadin/application.log"]
+    start_position => "beginning"
+  }
+  file {
+    path => ["{root}/logs/ms_api_gateway/application.log"]
+    start_position => "beginning"
+  }
+}
+
+output {
+  elasticsearch {
+    hosts => ["http://localhost:9200"]
+    index => "logs"
+  }
+  stdout { codec => rubydebug }
+}
