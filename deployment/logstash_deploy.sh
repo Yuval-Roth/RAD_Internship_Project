@@ -1,1 +1,0 @@
-python logstash_conf.py

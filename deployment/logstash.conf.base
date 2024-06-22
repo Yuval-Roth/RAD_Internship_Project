@@ -23,7 +23,7 @@ input {
 
 output {
   elasticsearch {
-    hosts => ["http://localhost:9200"]
+    hosts => ["{elasticsearch_uri}"]
     index => "logs"
   }
   stdout { codec => rubydebug }
