@@ -6,9 +6,10 @@ def get_project_root():
     return cwd.rsplit("/", 1)[0]
 
 
-def deploy_config(file_path):
+def deploy():
+    # create config
     new_file = get_project_root() + "/elk/kibana/config/kibana.yml"
-    with open(file_path, 'r') as file:
+    with open(config_base_path, 'r') as file:
         with open(new_file, 'w') as new:
             for line in file:
                 if line.startswith("#"):
@@ -26,4 +27,5 @@ if __name__ == "__main__":
     cwd = os.getcwd().replace("\\", "/")
     kibana_port = sys.argv[1]
     es_uri = sys.argv[2]
-    deploy_config(cwd + "/kibana.yml.base")
+    config_base_path = cwd + "/kibana.yml.base"
+    deploy()
