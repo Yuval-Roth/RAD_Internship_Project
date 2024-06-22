@@ -1,0 +1,2 @@
+{"attributes":{"description":"","filters":[],"query":{"language":"kuery","query":"ERROR"},"timefilter":null,"title":"error_query","titleKeyword":"error_query"},"coreMigrationVersion":"8.8.0","created_at":"2024-06-22T19:38:53.321Z","id":"8d5575db-35d2-4b50-a5ac-54ab76f2daf0","managed":false,"references":[],"type":"query","typeMigrationVersion":"10.2.0","updated_at":"2024-06-22T19:38:53.321Z","version":"WzcxLDld"}
+{"excludedObjects":[],"excludedObjectsCount":0,"exportedCount":1,"missingRefCount":0,"missingReferences":[]}
