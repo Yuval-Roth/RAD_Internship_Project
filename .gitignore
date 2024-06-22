@@ -43,3 +43,6 @@ elk/logstash/*
 
 **/logs/*
 client_vaadin/**/generated/*
+
+prometheus/data/
+prometheus/prometheus.exe
