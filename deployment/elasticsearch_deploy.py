@@ -1,5 +1,6 @@
 import sys
 import os
+import platform
 
 
 def get_project_root():
@@ -16,6 +17,7 @@ def deploy():
                     new.write(line)
                 else:
                     new.write(line
+                              .replace("{host_name}", host_name)
                               .replace("{network_host}", network_host)
                               .replace("{http_port}", http_port))
 
@@ -27,5 +29,6 @@ if __name__ == "__main__":
     cwd = os.getcwd().replace("\\", "/")
     network_host = sys.argv[1]
     http_port = sys.argv[2]
+    host_name = platform.uname().node
     config_base_path = cwd + "/elasticsearch.yml.base"
     deploy()
