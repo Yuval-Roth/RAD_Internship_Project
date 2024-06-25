@@ -34,12 +34,7 @@ build/
 
 compiled_jars/*
 
-elk/elasticsearch/*
-!elk/elasticsearch/config
-elk/kibana/*
-!elk/kibana/config
-elk/logstash/*
-!elk/logstash/config
+elk/*
 
 **/logs/*
 client_vaadin/**/generated/*
@@ -47,4 +42,6 @@ client_vaadin/**/generated/*
 prometheus/data/
 prometheus/prometheus.exe
 
+
 zipkin\zipkin-server-3.4.0-exec.jar
+

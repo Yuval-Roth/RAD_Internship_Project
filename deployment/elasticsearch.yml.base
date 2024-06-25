@@ -53,12 +53,12 @@
 # By default Elasticsearch is only accessible on localhost. Set a different
 # address here to expose this node on the network:
 #
-#network.host: 192.168.0.1
+network.host: {network_host}
 #
 # By default Elasticsearch listens for HTTP traffic on the first free port it
 # finds starting at 9200. Set a specific HTTP port here:
 #
-#http.port: 9200
+http.port: {http_port}
 #
 # For more information, consult the network module documentation.
 #
@@ -106,11 +106,11 @@ xpack.security.transport.ssl:
   truststore.path: certs/transport.p12
 # Create a new cluster with the current node only
 # Additional nodes can still join the cluster later
-cluster.initial_master_nodes: ["YUVAL-PC"]
+cluster.initial_master_nodes: ["{host_name}"]
 
 # Allow HTTP API connections from anywhere
 # Connections are encrypted and require user authentication
-http.host: 0.0.0.0
+#http.host: 0.0.0.0
 
 # Allow other nodes to join the cluster from anywhere
 # Connections are encrypted and mutually authenticated
