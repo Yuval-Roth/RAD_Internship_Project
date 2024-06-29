@@ -12,6 +12,7 @@ import org.springframework.lang.NonNull;
 public class MongoConfig extends AbstractMongoClientConfiguration {
 
     private static final String DB_NAME = "user_db";
+    private static final String MONGO_HOST = "mongodb";
 
     @Override
     @NonNull
@@ -22,7 +23,7 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
     @Override
     @NonNull
     public MongoClient mongoClient() {
-        ConnectionString connectionString = new ConnectionString("mongodb://localhost:27017/"+DB_NAME);
+        ConnectionString connectionString = new ConnectionString("mongodb://" + MONGO_HOST + ":27017/" +DB_NAME);
         MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
                 .applyConnectionString(connectionString)
                 .build();

@@ -1,0 +1,39 @@
+version: '3.8'
+name: rad_ms
+networks:
+    ms_network:
+        name: ms_network
+        driver: bridge
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    networks:
+      - ms_network
+    volumes:
+      - c:\mongodb_data:/data/db
+  ms_service_discovery:
+    image: ms_service_discovery
+    build:
+      context: ms_service_discovery
+      dockerfile: Dockerfile
+    container_name: ms_service_discovery
+    ports:
+      - "8761:8761"
+    networks:
+      - ms_network
+  ms_api_gateway:
+    image: ms_api_gateway
+    build:
+      context: ms_api_gateway
+      dockerfile: Dockerfile
+    container_name: ms_api_gateway
+    ports:
+      - "8080:8080"
+    networks:
+      - ms_network
+    depends_on:
+      - ms_service_discovery
+      - mongodb
