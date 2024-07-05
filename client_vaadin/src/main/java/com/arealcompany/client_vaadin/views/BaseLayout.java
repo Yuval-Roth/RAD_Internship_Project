@@ -1,9 +1,10 @@
 package com.arealcompany.client_vaadin.views;
 
 import com.arealcompany.client_vaadin.Business.AppController;
+import com.arealcompany.client_vaadin.Business.Endpoints;
 import com.arealcompany.client_vaadin.Business.dtos.User;
+import com.arealcompany.client_vaadin.exceptions.ApplicationException;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -15,7 +16,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.component.textfield.PasswordField;
@@ -25,7 +25,6 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Consumer;
@@ -52,8 +51,22 @@ public abstract class BaseLayout extends AppLayout {
         nav2.addItem(new SideNavItem("Teams", NbaTeamsView.class, VaadinIcon.TROPHY.create()));
         nav2.addItem(new SideNavItem("Players", NbaPlayersView.class, VaadinIcon.NURSE.create()));
 
+        SideNav nav3 = new SideNav();
+        nav3.setLabel("Administration");
+        SideNavItem fetchData = new SideNavItem("Fetch data");
+        nav3.addItem(fetchData);
+        fetchData.getElement().addEventListener("click", event -> {
+            try {
+                appController.getByEndpoint(Endpoints.FETCH_NBA_DATA);
+                appController.getByEndpoint(Endpoints.FETCH_POPULATION_DATA);
+                Notification.show("Data fetched successfully");
+            } catch (ApplicationException e) {
+                openErrorDialog(e.getMessage());
+            }
+        });
+
         VerticalLayout sideNav = new VerticalLayout();
-        sideNav.add(nav1, nav2);
+        sideNav.add(nav1, nav2, nav3);
 
         DrawerToggle toggle = new DrawerToggle();
 

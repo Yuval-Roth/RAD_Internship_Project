@@ -1,8 +1,8 @@
 version: '3.8'
-name: rad_ms
+name: rad-ms
 networks:
-    ms_network:
-        name: ms_network
+    ms-network:
+        name: ms-network
         driver: bridge
 services:
   mongodb:
@@ -11,29 +11,69 @@ services:
     ports:
       - "27017:27017"
     networks:
-      - ms_network
+      - ms-network
     volumes:
       - c:\mongodb_data:/data/db
-  ms_service_discovery:
-    image: ms_service_discovery
-    build:
-      context: ms_service_discovery
-      dockerfile: Dockerfile
-    container_name: ms_service_discovery
-    ports:
-      - "8761:8761"
-    networks:
-      - ms_network
-  ms_api_gateway:
-    image: ms_api_gateway
+  ms-api-gateway:
     build:
       context: ms_api_gateway
       dockerfile: Dockerfile
-    container_name: ms_api_gateway
+    container_name: ms-api-gateway
+    networks:
+      - ms-network
+    depends_on:
+      - mongodb
     ports:
       - "8080:8080"
+  ms-nba:
+    build:
+      context: ms_nba
+      dockerfile: Dockerfile
+    container_name: ms-nba
+    env_file:
+      - keys.env
     networks:
-      - ms_network
+      - ms-network
     depends_on:
-      - ms_service_discovery
+      - mongodb
+    ports:
+      - "8081:8081"
+  ms-news:
+    build:
+      context: ms_news
+      dockerfile: Dockerfile
+    container_name: ms-news
+    env_file:
+      - keys.env
+    networks:
+        - ms-network
+    ports:
+      - "8083:8083"
+  ms-population:
+    build:
+      context: ms_population
+      dockerfile: Dockerfile
+    container_name: ms-population
+    depends_on:
+      - mongodb
+    env_file:
+      - keys.env
+    networks:
+      - ms-network
+    ports:
+      - "8082:8082"
+  client-vaadin:
+    build:
+      context: client_vaadin
+      dockerfile: Dockerfile
+    container_name: client-vaadin
+    ports:
+      - "80:80"
+    networks:
+      - ms-network
+    depends_on:
+      - ms-api-gateway
+      - ms-nba
+      - ms-news
+      - ms-population
       - mongodb

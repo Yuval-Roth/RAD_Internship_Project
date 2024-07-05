@@ -2,7 +2,6 @@ package com.arealcompany.client_vaadin.views;
 
 import com.arealcompany.client_vaadin.Business.AppController;
 import com.arealcompany.client_vaadin.Business.Endpoints;
-import com.arealcompany.client_vaadin.Business.dtos.Player;
 import com.arealcompany.client_vaadin.Business.dtos.PopulationStat;
 import com.arealcompany.client_vaadin.Business.dtos.User;
 import com.arealcompany.client_vaadin.exceptions.ApplicationException;
@@ -33,7 +32,7 @@ public class PopulationView extends BaseLayout {
         }
 
         try {
-            List<PopulationStat> popStats = appController.fetchByEndpoint(Endpoints.GET_POPULATION);
+            List<PopulationStat> popStats = appController.getByEndpoint(Endpoints.GET_POPULATION);
             Grid<PopulationStat> grid = new Grid<>(PopulationStat.class, false);
             Grid.Column<PopulationStat> countryC = grid.addColumn(PopulationStat::country).setHeader("Country").setSortable(true);
             Grid.Column<PopulationStat> numberC = grid.addColumn(PopulationStat::readable_format).setHeader("Count").setSortable(true);
