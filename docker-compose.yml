@@ -8,8 +8,6 @@ services:
   mongodb:
     image: mongo
     container_name: mongodb
-    ports:
-      - "27017:27017"
     networks:
       - ms-network
     volumes:
@@ -23,8 +21,6 @@ services:
       - ms-network
     depends_on:
       - mongodb
-    ports:
-      - "8080:8080"
   ms-nba:
     build:
       context: ms_nba
@@ -36,8 +32,6 @@ services:
       - ms-network
     depends_on:
       - mongodb
-    ports:
-      - "8081:8081"
   ms-news:
     build:
       context: ms_news
@@ -47,8 +41,6 @@ services:
       - keys.env
     networks:
         - ms-network
-    ports:
-      - "8083:8083"
   ms-population:
     build:
       context: ms_population
@@ -60,8 +52,6 @@ services:
       - keys.env
     networks:
       - ms-network
-    ports:
-      - "8082:8082"
   client-vaadin:
     build:
       context: client_vaadin
