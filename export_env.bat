@@ -16,4 +16,3 @@ for %%A in (%KEYS%) do (
 )
 
 echo Keys exported to %ENV_FILE%
-pause

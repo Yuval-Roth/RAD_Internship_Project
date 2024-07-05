@@ -13,6 +13,7 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
 
     private static final String DB_NAME = "user_db";
     private static final String MONGO_HOST = "mongodb";
+//    private static final String MONGO_HOST = "localhost";
 
     @Override
     @NonNull
