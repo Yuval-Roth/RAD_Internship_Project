@@ -1,5 +1,6 @@
 package com.arealcompany.aws_terminal;
 
+import com.arealcompany.ms_common.utils.EnvUtils;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ec2.Ec2Client;
 import software.amazon.awssdk.services.ec2.model.*;
@@ -10,7 +11,7 @@ import java.util.List;
 
 public class AwsTerminal {
 
-    private static final String INSTANCE_TYPE = "t3.micro";
+    private static final String INSTANCE_TYPE = "t3.large";
     private static final String INSTANCE_NAME = "RAD_microservices";
     private static Ec2Client ec2;
     private static String imageId;
@@ -71,6 +72,7 @@ public class AwsTerminal {
                 .instanceType(INSTANCE_TYPE)
                 .maxCount(1)
                 .minCount(1)
+                .keyName("default_key_pair")
                 .userData(new String(Base64.getEncoder().encode(getUserScript().getBytes())))
                 .tagSpecifications(TagSpecification.builder()
                         .resourceType(ResourceType.INSTANCE)
@@ -95,7 +97,14 @@ public class AwsTerminal {
     private static String getUserScript(){
         return """
                 #!/bin/bash
-                wget https://raw.githubusercontent.com/Yuval-Roth/RAD_Internship_Project/docker/aws_terminal/docker-compose.yml -O /~/docker-compose.yml
-                cd ~/ && docker-compose up""";
+                cd ~/
+                wget https://raw.githubusercontent.com/Yuval-Roth/RAD_Internship_Project/docker/aws_terminal/docker-compose.yml -O docker-compose.yml
+                echo %s >> keys.env
+                echo %s >> keys.env
+                ./docker-compose up > output 2>&1
+                echo done > done""".formatted(
+                        "RAPIDAPI_KEY="+EnvUtils.getEnvField("RAPIDAPI_KEY"),
+                        "GNEWS_KEY="+EnvUtils.getEnvField("GNEWS_KEY")
+                );
     }
 }
