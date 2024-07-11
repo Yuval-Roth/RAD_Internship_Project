@@ -1,5 +1,6 @@
 version: '3.8'
-name: rad-ms
+name: rad
+
 networks:
     ms-network:
         name: ms-network

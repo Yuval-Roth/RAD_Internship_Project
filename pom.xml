@@ -29,6 +29,7 @@
         <module>ms_population</module>
         <module>ms_api_gateway</module>
         <module>client_vaadin</module>
+        <module>aws_terminal</module>
     </modules>
 
     <dependencies>
