@@ -80,6 +80,13 @@ public class AwsTerminal {
                 .maxCount(1)
                 .minCount(1)
                 .userData(getUserScript(service))
+                .tagSpecifications(TagSpecification.builder()
+                        .resourceType(ResourceType.INSTANCE)
+                        .tags(Tag.builder()
+                                .key("Name")
+                                .value(service)
+                                .build())
+                        .build())
                 .build();
 
         ec2.runInstances(runRequest);
