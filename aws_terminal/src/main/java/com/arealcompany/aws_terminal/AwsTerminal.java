@@ -11,7 +11,7 @@ import java.util.List;
 
 public class AwsTerminal {
 
-    private static final String INSTANCE_TYPE = "t3.large";
+    private static final String INSTANCE_TYPE = "t3.medium";
     private static final String INSTANCE_NAME = "RAD_microservices";
     private static Ec2Client ec2;
     private static String imageId;
@@ -101,8 +101,7 @@ public class AwsTerminal {
                 wget https://raw.githubusercontent.com/Yuval-Roth/RAD_Internship_Project/docker/aws_terminal/docker-compose.yml -O docker-compose.yml
                 echo %s >> keys.env
                 echo %s >> keys.env
-                ./docker-compose up > output 2>&1
-                echo done > done""".formatted(
+                ./docker-compose up""".formatted(
                         "RAPIDAPI_KEY="+EnvUtils.getEnvField("RAPIDAPI_KEY"),
                         "GNEWS_KEY="+EnvUtils.getEnvField("GNEWS_KEY")
                 );
