@@ -26,23 +26,24 @@ public class AwsTerminal {
                 .filters(Filter.builder()
                         .name("tag:Name")
                         .values("docker")
-                        .build()).build();
+                        .build())
+                .build();
         DescribeImagesResponse imagesResponse = ec2.describeImages(describeImagesRequest);
         imageId = imagesResponse.images().getFirst().imageId();
 
-        while(true){
-            try{
+        while (true) {
+            try {
                 System.out.println("AWS Terminal");
                 System.out.println("1. Start services");
                 System.out.println("2. Shutdown services");
                 System.out.println("3. Exit");
                 String answer = System.console().readLine();
-                switch(answer){
+                switch (answer) {
                     case "1" -> startServices();
                     case "2" -> shutdownServices();
                     case "3" -> exit();
                 }
-            } catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -54,16 +55,45 @@ public class AwsTerminal {
     }
 
     private static void exit() {
+        System.out.println("Exiting AWS Terminal");
+        ec2.close();
+        System.exit(0);
     }
 
     private static void shutdownServices() {
 
+        System.out.println("Shutting down services");
+        DescribeInstancesRequest describeInstancesRequest = DescribeInstancesRequest.builder().build();
+        DescribeInstancesResponse describeInstancesResponse = ec2.describeInstances(describeInstancesRequest);
+
+        List<Instance> instances = describeInstancesResponse.reservations().stream()
+                .flatMap(reservation -> reservation.instances().stream())
+                .filter(instance -> instance.state().name() != InstanceStateName.TERMINATED)
+                .filter(instance -> instance.tags().stream()
+                        .anyMatch(tag -> tag.key().equals("Name") && tag.value().equals(INSTANCE_NAME)))
+                .toList();
+
+        if (instances.isEmpty()) {
+            System.out.println("No running instances found to shutdown");
+            return;
+        }
+
+        for (Instance instance : instances) {
+            TerminateInstancesRequest terminateRequest = TerminateInstancesRequest.builder()
+                    .instanceIds(instance.instanceId())
+                    .build();
+            ec2.terminateInstances(terminateRequest);
+            System.out.printf("Terminated instance with ID: %s%n", instance.instanceId());
+        }
+
     }
 
     private static void runIfNotRunning(String imageId, String machineName) {
-        if(isRunning()){
+        if (isRunning()) {
+            System.out.printf("%s is already running%n", machineName);
             return;
         }
+
         System.out.printf("Starting %s%n", machineName);
 
         RunInstancesRequest runRequest = RunInstancesRequest.builder()
@@ -88,22 +118,22 @@ public class AwsTerminal {
     private static boolean isRunning() {
         return (int) ec2.describeInstances().reservations().stream()
                 .flatMap(reservation -> reservation.instances().stream())
-                .filter(instance -> instance.state().name() != InstanceStateName.TERMINATED)
+                .filter(instance -> instance.state().name() == InstanceStateName.RUNNING)
                 .filter(instance -> instance.tags().stream()
                         .anyMatch(tag -> tag.key().equals("Name") && tag.value().equals(INSTANCE_NAME)))
                 .count() > 0;
     }
 
-    private static String getUserScript(){
+    private static String getUserScript() {
         return """
                 #!/bin/bash
                 cd ~/
                 wget https://raw.githubusercontent.com/Yuval-Roth/RAD_Internship_Project/docker/aws_terminal/docker-compose.yml -O docker-compose.yml
                 echo %s >> keys.env
                 echo %s >> keys.env
-                ./docker-compose up""".formatted(
-                        "RAPIDAPI_KEY="+EnvUtils.getEnvField("RAPIDAPI_KEY"),
-                        "GNEWS_KEY="+EnvUtils.getEnvField("GNEWS_KEY")
-                );
+                ./docker-compose up"""
+                .formatted(
+                        "RAPIDAPI_KEY=" + EnvUtils.getEnvField("RAPIDAPI_KEY"),
+                        "GNEWS_KEY=" + EnvUtils.getEnvField("GNEWS_KEY"));
     }
 }
