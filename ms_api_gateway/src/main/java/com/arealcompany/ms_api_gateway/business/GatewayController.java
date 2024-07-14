@@ -4,40 +4,32 @@ import com.arealcompany.ms_common.utils.APIFetcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.netflix.eureka.EurekaDiscoveryClient;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 @Component("GatewayController")
 public class GatewayController {
 
     private static final String SERVICE_NOT_FOUND = "Service not found";
     private static final Logger log = LoggerFactory.getLogger(GatewayController.class);
-    private final EurekaDiscoveryClient discoveryClient;
 
-    @Value("${ms.nba.hostname}")
-    private String MS_NBA_HOSTNAME;
-    @Value("${ms.news.hostname}")
-    private String MS_NEWS_HOSTNAME;
-    @Value("${ms.population.hostname}")
-    private String MS_POPULATION_HOSTNAME;
-
-    public GatewayController(EurekaDiscoveryClient discoveryClient) {
-        this.discoveryClient = discoveryClient;
-    }
+    @Value("${ms.nba.uri}")
+    private String MS_NBA_URI;
+    @Value("${ms.news.uri}")
+    private String MS_NEWS_URI;
+    @Value("${ms.population.uri}")
+    private String MS_POPULATION_URI;
 
     public String forwardRequest(String service, String action, String endpoint, Map<String,String> params, String body) {
 
         log.debug("Forwarding request to service: {} endpoint: {} params: {}", service, endpoint, params);
 
         String actualService = switch(service){
-            case "nba" -> MS_NBA_HOSTNAME;
-            case "news" -> MS_NEWS_HOSTNAME;
-            case "population" -> MS_POPULATION_HOSTNAME;
+            case "nba" -> MS_NBA_URI;
+            case "news" -> MS_NEWS_URI;
+            case "population" -> MS_POPULATION_URI;
             default -> null;
         };
 
@@ -48,17 +40,8 @@ public class GatewayController {
 
         log.trace("Actual service: {}", actualService);
 
-        ServiceInstance serviceInstance;
-        try{
-            serviceInstance = discoveryClient.getInstances(actualService).getFirst();
-        } catch (NoSuchElementException ignored){
-            return SERVICE_NOT_FOUND;
-        }
-
-        log.trace("Forwarding to host: {}", serviceInstance.getHost());
-
         APIFetcher fetcher = APIFetcher.create()
-                .withUri("%s/%s/%s".formatted(serviceInstance.getUri(),action,endpoint))
+                .withUri("%s/%s/%s".formatted(actualService,action,endpoint))
                 .withParams(params);
 
         if(!body.isEmpty()){
@@ -73,7 +56,7 @@ public class GatewayController {
         }
     }
 
-    public String forwardRequest(String service, String update, String endpoint, Map<String, String> params) {
-        return forwardRequest(service, update, endpoint, params, "");
+    public String forwardRequest(String service, String action, String endpoint, Map<String, String> params) {
+        return forwardRequest(service, action, endpoint, params, "");
     }
 }

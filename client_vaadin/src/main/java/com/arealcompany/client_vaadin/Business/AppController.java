@@ -6,6 +6,7 @@ import com.arealcompany.ms_common.utils.APIFetcher;
 import com.arealcompany.ms_common.utils.JsonUtils;
 import com.arealcompany.ms_common.utils.Response;
 import com.google.gson.JsonSyntaxException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -16,14 +17,15 @@ import java.util.List;
 @Service
 public class AppController {
 
-    private static final String API_URI = "http://localhost:8080/";
+    @Value("${api.uri}")
+    private String API_URI;
 
     public String getWelcomeMessage() {
         return "Welcome to my app!";
     }
 
-    public <T> List<T> fetchByEndpoint(Endpoints endpoint) throws ApplicationException {
-        return fetch(endpoint.location(), endpoint.clazz());
+    public <T> List<T> getByEndpoint(Endpoints endpoint) throws ApplicationException {
+        return get(endpoint.location(), endpoint.clazz());
     }
 
     public void postByEndpoint(Endpoints endpoint, Object entity) throws ApplicationException {
@@ -34,11 +36,11 @@ public class AppController {
         User.currentUser = new User(username, password);
         List<Boolean> fetched;
         try {
-            fetched = fetchByEndpoint(Endpoints.LOGIN);
+            fetched = getByEndpoint(Endpoints.LOGIN);
         } catch (ApplicationException e) {
             return false;
         }
-        Boolean success = fetched.get(0);
+        Boolean success = fetched.getFirst();
         if (success) {
             User.isUserLoggedIn = true;
         } else {
@@ -47,7 +49,7 @@ public class AppController {
         return success;
     }
 
-    private <T> List<T> fetch(String location, Type t) throws ApplicationException {
+    private <T> List<T> get(String location, Type t) throws ApplicationException {
         ApplicationException fetchFailed = new ApplicationException("Failed to fetch data");
 
         String auth = getAuth();

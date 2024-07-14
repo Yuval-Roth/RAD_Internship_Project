@@ -14,7 +14,6 @@ import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.Route;
 
 import java.util.List;
-import java.util.Map;
 
 @Route("nba/teams")
 public class NbaTeamsView extends BaseLayout {
@@ -31,7 +30,7 @@ public class NbaTeamsView extends BaseLayout {
         }
 
         try{
-            List<Team> nbaTeams = appController.fetchByEndpoint(Endpoints.GET_TEAMS);
+            List<Team> nbaTeams = appController.getByEndpoint(Endpoints.GET_TEAMS);
             Grid<Team> grid = new Grid<>(Team.class,false);
             Grid.Column<Team> idC = grid.addColumn(Team::id).setHeader("ID").setAutoWidth(true).setFlexGrow(0).setSortable(true);
             Grid.Column<Team> nameC = grid.addColumn(Team::name).setHeader("Name").setAutoWidth(true).setFlexGrow(0).setSortable(true);

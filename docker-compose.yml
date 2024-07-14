@@ -1,0 +1,70 @@
+version: '3.8'
+name: rad
+
+networks:
+    ms-network:
+        name: ms-network
+        driver: bridge
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    networks:
+      - ms-network
+    volumes:
+      - c:\mongodb_data:/data/db
+  ms-api-gateway:
+    build:
+      context: ms_api_gateway
+      dockerfile: Dockerfile
+    container_name: ms-api-gateway
+    networks:
+      - ms-network
+    depends_on:
+      - mongodb
+  ms-nba:
+    build:
+      context: ms_nba
+      dockerfile: Dockerfile
+    container_name: ms-nba
+    env_file:
+      - keys.env
+    networks:
+      - ms-network
+    depends_on:
+      - mongodb
+  ms-news:
+    build:
+      context: ms_news
+      dockerfile: Dockerfile
+    container_name: ms-news
+    env_file:
+      - keys.env
+    networks:
+        - ms-network
+  ms-population:
+    build:
+      context: ms_population
+      dockerfile: Dockerfile
+    container_name: ms-population
+    depends_on:
+      - mongodb
+    env_file:
+      - keys.env
+    networks:
+      - ms-network
+  client-vaadin:
+    build:
+      context: client_vaadin
+      dockerfile: Dockerfile
+    container_name: client-vaadin
+    ports:
+      - "80:80"
+    networks:
+      - ms-network
+    depends_on:
+      - ms-api-gateway
+      - ms-nba
+      - ms-news
+      - ms-population
+      - mongodb

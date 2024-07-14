@@ -22,6 +22,12 @@ public class GatewayApi {
         return controller.forwardRequest(service,"get", endpoint, params);
     }
 
+    @GetMapping("/{service}/get/fetch")
+    public String fetchData(@PathVariable String service,
+                            @RequestParam Map<String,String> params){
+        return controller.forwardRequest(service,"get","fetch", params);
+    }
+
     @PostMapping("/{service}/update/{endpoint}")
     public String forwardRequestPost(@PathVariable String service,
                                      @PathVariable String endpoint,

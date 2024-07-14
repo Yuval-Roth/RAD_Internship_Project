@@ -109,7 +109,7 @@ public class ListGenericView<T> extends VerticalLayout {
 
     private void populateGrid() {
         try {
-            grid.setItems(appController.fetchByEndpoint(endpoints.get("fetch")));
+            grid.setItems(appController.getByEndpoint(endpoints.get("fetch")));
         } catch (ApplicationException e) {
             handleError(e.getMessage());
         }

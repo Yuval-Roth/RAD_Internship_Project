@@ -1,5 +1,6 @@
 package com.arealcompany.ms_population.api;
 
+import com.arealcompany.ms_common.utils.Response;
 import com.arealcompany.ms_population.business.PopulationController;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,5 +21,11 @@ public class PopulationApi {
     @PostMapping("/update")
     public String updateCountry(@RequestBody String body) {
         return controller.updateCountry(body);
+    }
+
+    @GetMapping("/get/fetch")
+    public String fetch() {
+        controller.fetchData();
+        return Response.get(true);
     }
 }

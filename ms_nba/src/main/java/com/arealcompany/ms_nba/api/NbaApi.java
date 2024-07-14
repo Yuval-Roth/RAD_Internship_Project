@@ -1,5 +1,6 @@
 package com.arealcompany.ms_nba.api;
 
+import com.arealcompany.ms_common.utils.Response;
 import com.arealcompany.ms_nba.business.NbaController;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,12 @@ public class NbaApi {
     @GetMapping(value = "/get/players")
     public String getPlayers(@RequestParam(value = "limit", defaultValue = "-1") Integer limit) {
         return controller.getPlayers(limit);
+    }
+
+    @GetMapping("/get/fetch")
+    public String fetch() {
+        controller.fetchData();
+        return Response.get(true);
     }
 
     @PostMapping("/update/teams")

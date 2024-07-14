@@ -6,8 +6,6 @@ import com.arealcompany.client_vaadin.Business.dtos.Article;
 import com.arealcompany.client_vaadin.Business.dtos.User;
 import com.arealcompany.client_vaadin.exceptions.ApplicationException;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Span;
@@ -15,7 +13,6 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.virtuallist.VirtualList;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.dom.Style;
@@ -42,7 +39,7 @@ public class NewsView extends BaseLayout {
 
         try{
 
-            List<Article> articles = appController.fetchByEndpoint(Endpoints.GET_NEWS);
+            List<Article> articles = appController.getByEndpoint(Endpoints.GET_NEWS);
 
             VirtualList<Article> virtualList = new VirtualList<>();
             virtualList.setItems(articles);

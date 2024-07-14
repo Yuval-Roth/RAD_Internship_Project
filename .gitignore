@@ -42,6 +42,7 @@ client_vaadin/**/generated/*
 prometheus/data/
 prometheus/prometheus.exe
 
+**/*.env
 
 zipkin\zipkin-server-3.4.0-exec.jar
 

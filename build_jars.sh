@@ -5,7 +5,7 @@ DESTINATION_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 SUFFIX_PATTERN="-[0-9]*.[0-9]*.[0-9]*-SNAPSHOT"
 
 # List of directories to enter
-ENTER_DIRS=("ms_nba/" "ms_news/" "ms_population/" "ms_service_discovery/" "ms_api_gateway/" "client_vaadin/")
+ENTER_DIRS=("ms_nba/" "ms_news/" "ms_population/" "ms_api_gateway/" "client_vaadin/")
 
 # Function to check if a directory is in the enter list
 should_enter() {

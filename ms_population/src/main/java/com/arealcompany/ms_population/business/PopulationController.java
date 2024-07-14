@@ -57,7 +57,7 @@ public class PopulationController {
         log.debug("\nPopulation data ready to be queried via the REST API on port '{}'.",PORT);
     }
 
-    private void fetchData(){
+    public void fetchData(){
         log.debug("Fetching population data from the API...");
 
         List<PopulationStat> stats = new LinkedList<>();
