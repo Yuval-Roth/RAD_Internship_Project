@@ -8,6 +8,7 @@ import software.amazon.awssdk.services.ec2.model.*;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class AwsTerminal {
 
@@ -65,26 +66,24 @@ public class AwsTerminal {
         System.out.println("Shutting down services");
         DescribeInstancesRequest describeInstancesRequest = DescribeInstancesRequest.builder().build();
         DescribeInstancesResponse describeInstancesResponse = ec2.describeInstances(describeInstancesRequest);
-
-        List<Instance> instances = describeInstancesResponse.reservations().stream()
-                .flatMap(reservation -> reservation.instances().stream())
-                .filter(instance -> instance.state().name() != InstanceStateName.TERMINATED)
-                .filter(instance -> instance.tags().stream()
-                        .anyMatch(tag -> tag.key().equals("Name") && tag.value().equals(INSTANCE_NAME)))
-                .toList();
-
-        if (instances.isEmpty()) {
+        Instance instance;
+        try {
+            instance = describeInstancesResponse.reservations().stream()
+                    .flatMap(reservation -> reservation.instances().stream())
+                    .filter(i -> i.state().name() != InstanceStateName.TERMINATED)
+                    .filter(i -> i.tags().stream()
+                            .anyMatch(tag -> tag.key().equals("Name") && tag.value().equals(INSTANCE_NAME)))
+                    .toList().get(0);
+        } catch (NoSuchElementException exception) {
             System.out.println("No running instances found to shutdown");
             return;
         }
 
-        for (Instance instance : instances) {
-            TerminateInstancesRequest terminateRequest = TerminateInstancesRequest.builder()
-                    .instanceIds(instance.instanceId())
-                    .build();
-            ec2.terminateInstances(terminateRequest);
-            System.out.printf("Terminated instance with ID: %s%n", instance.instanceId());
-        }
+        TerminateInstancesRequest terminateRequest = TerminateInstancesRequest.builder()
+                .instanceIds(instance.instanceId())
+                .build();
+        ec2.terminateInstances(terminateRequest);
+        System.out.printf("Terminated instance with ID: %s%n", instance.instanceId());
 
     }
 
@@ -118,7 +117,8 @@ public class AwsTerminal {
     private static boolean isRunning() {
         return (int) ec2.describeInstances().reservations().stream()
                 .flatMap(reservation -> reservation.instances().stream())
-                .filter(instance -> instance.state().name() == InstanceStateName.RUNNING)
+                .filter(instance -> instance.state().name() != InstanceStateName.TERMINATED &&
+                        instance.state().name() != InstanceStateName.SHUTTING_DOWN)
                 .filter(instance -> instance.tags().stream()
                         .anyMatch(tag -> tag.key().equals("Name") && tag.value().equals(INSTANCE_NAME)))
                 .count() > 0;
