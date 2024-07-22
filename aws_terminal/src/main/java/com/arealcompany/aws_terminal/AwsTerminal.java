@@ -1,6 +1,7 @@
 package com.arealcompany.aws_terminal;
 
 import com.arealcompany.ms_common.utils.EnvUtils;
+import org.springframework.beans.factory.annotation.Value;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ec2.Ec2Client;
 import software.amazon.awssdk.services.ec2.model.*;
@@ -12,11 +13,15 @@ import java.util.NoSuchElementException;
 
 public class AwsTerminal {
 
-    private static final String INSTANCE_TYPE = "t3.medium";
-    private static final String INSTANCE_NAME = "RAD_microservices";
+    @Value("${ec2.instance.type}")
+    private static String INSTANCE_TYPE;
+    @Value("${ec2.instance.name}")
+    private static String INSTANCE_NAME;
+    @Value("${ec2.instance.security_group}")
+    private static String SECURITY_GROUP;
+
     private static Ec2Client ec2;
     private static String imageId;
-    private static final String SECURITY_GROUP = "sg-0befc037eb4342677";
 
     public static void main(String[] args) {
         ec2 = Ec2Client.builder()
