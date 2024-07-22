@@ -128,7 +128,7 @@ public class AwsTerminal {
         return """
                 #!/bin/bash
                 cd ~/
-                wget https://raw.githubusercontent.com/Yuval-Roth/RAD_Internship_Project/docker/aws_terminal/docker-compose.yml -O docker-compose.yml
+                wget https://raw.githubusercontent.com/Yuval-Roth/RAD_Internship_Project/main/aws_terminal/docker-compose.yml -O docker-compose.yml
                 echo %s >> keys.env
                 echo %s >> keys.env
                 ./docker-compose up"""
